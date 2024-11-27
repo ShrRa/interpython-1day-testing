@@ -3,19 +3,17 @@ title: "Introduction to Our Software Project"
 teaching: 20
 exercises: 10
 questions:
-- "What is the design architecture of our example software project?"
-- "Why is splitting code into smaller functional units (modules) good when designing software?"
+- "How to set up the virtual environment and IDE?"
+- "How to obtain software project we will be working on?"
+- "What is the structure of our software project?"
 objectives:
 - "Use Git to obtain a working copy of our software project from GitHub."
 - "Inspect the structure and architecture of our software project."
-- "Understand Model-View-Controller (MVC) architecture in software design and its use in our project."
+- "Familiarize ourselves with virtual enviroment management and Jupyter Lab IDE."
 
 keypoints:
-- "Programming interfaces define how individual modules within a software application interact among themselves or
-how the application itself interacts with its users."
-- "MVC is a software design architecture which divides the application into three interconnected modules: Model (data),
-View (user interface), and Controller (input/output and data manipulation)."
-- "The software project we use throughout this course is an example of an MVC application that allows us to inspect and analyze astronomical light curves."
+- "---"
+
 ---
 
 ## Light Curve Analysis Project
@@ -229,43 +227,6 @@ some software libraries, such as `numpy` and `matplotlib` in Python,
 are bigger modules that contain several smaller sub-modules.
 Another example of modules are classes in object-oriented programming languages.
 
-> ## Programming Modules and Interfaces
-> Although modules are self-contained and independent elements to a large extent
-> (they can depend on other modules),
-> there are well-defined ways of how they interact with one another.
-> These rules of interaction are called **programming interfaces** -
-> they define how other modules (clients) can use a particular module.
-> Typically, an interface to a module includes
-> rules on how a module can take input from
-> and how it gives output back to its clients.
-> A client can be a human, in which case we also call these user interfaces.
-> Even smaller functional units such as functions/methods have clearly defined interfaces -
-> a function/method’s definition
-> (also known as a *signature*)
-> states what parameters it can take as input and what it returns as an output.
->
-{: .callout}
-
-There are various software architectures around defining different ways of
-dividing the code into smaller modules with well defined roles, for example:
-
-- [Model–View–Controller (MVC) architecture](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller),
-  which we will look into in detail and use for our software project,
-- [Service-oriented architecture (SOA)](https://en.wikipedia.org/wiki/Service-oriented_architecture),
-  which separates code into distinct services,
-  accessible over a network by consumers (users or other services)
-  that communicate with each other by passing data in a well-defined, shared format (protocol),
-- [Client-server architecture](https://en.wikipedia.org/wiki/Client%E2%80%93server_model),
-  where clients request content or service from a server,
-  initiating communication sessions with servers,
-  which await incoming requests (e.g. email, network printing, the Internet),
-- [Multilayer architecture](https://en.wikipedia.org/wiki/Multitier_architecture),
-  is a type of architecture in which presentation,
-  application processing
-  and data management functions
-  are split into distinct layers and may even be physically separated to run on separate machines -
-  some more detail on this later in the course.
-
 ### Model-View-Controller (MVC) Architecture
 MVC architecture divides the related program logic
 into three interconnected modules:
@@ -294,52 +255,6 @@ and then updates the **View** accordingly.
 For example, on user request,
 **Controller** updates a picture on a user's GitHub profile
 and then modifies the **View** by displaying the updated profile back to the user.
-
-#### MVC Examples
-
-MVC architecture can be applied in scientific applications in the following manner.
-Model comprises those parts of the application that deal with
-some type of scientific processing or manipulation of the data,
-e.g. numerical algorithm, simulation, statistical analysis.
-View is a visualisation, or format, of the output,
-e.g. graphical plot, diagram, chart, data table, file.
-Controller is the part that ties the scientific processing and output parts together,
-mediating input and passing it to the model or view,
-e.g. command line options, mouse clicks, input files.
-For example, the diagram below depicts the use of MVC architecture for the
-[DNA Guide Graphical User Interface application](https://www.software.ac.uk/developing-scientific-applications-using-model-view-controller-approach).
-
-![MVC example of a DNA Guide Graphical User Interface application](../fig/mvc-DNA-guide-GUI.png){: .image-with-shadow width="400px" }
-{% comment %}Image from https://www.software.ac.uk/developing-scientific-applications-using-model-view-controller-approach{% endcomment %}
-
-> ## Exercise: MVC Application Examples From your Work
-> Think of some other examples from your work or life
-> where MVC architecture may be suitable
-> or have a discussion with your fellow learners.
-> > ## Solution
-> > MVC architecture is a popular choice when designing web and mobile applications.
-> > Users interact with a web/mobile application by sending various requests to it.
-> > Forms to collect users inputs/requests
-> > together with the info returned and displayed to the user as a result represent the View.
-> > Requests are processed by the Controller,
-> > which interacts with the Model to retrieve or update the underlying data.
-> > For example, a user may request to view its profile.
-> > The Controller retrieves the account information for the user from the Model
-> > and passes it to the View for rendering.
-> > The user may further interact with the application
-> > by asking it to update its personal information.
-> > Controller verifies the correctness of the information
-> > (e.g. the password satisfies certain criteria,
-> > postal address and phone number are in the correct format, etc.)
-> > and passes it to the Model for permanent storage.
-> > The View is then updated accordingly and the user sees its updated profile details.
-> >
-> > Note that not everything fits into the MVC architecture
-> > but it is still good to think about how things could be split into smaller units.
-> > For a few more examples, have a look at this short
-> > [article on MVC from CodeAcademy](https://www.codecademy.com/articles/mvc).
-> {: .solution}
-{: .challenge}
 
 > ## Separation of Concerns
 > Separation of concerns is important when designing software architectures

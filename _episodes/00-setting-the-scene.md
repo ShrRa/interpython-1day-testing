@@ -11,10 +11,8 @@ objectives:
 - "Setting the scene and expectations"
 - "Making sure everyone has all the necessary software installed"
 keypoints:
-- "This lesson focuses on core, intermediate skills covering the whole software development life-cycle
-that will be of most use to anyone working collaboratively on code."
-- "For code development in teams - you need more than just the right tools and languages. You need a strategy
-(best practices) for how you'll use these tools as a team."
+- "For developing software that will be used by other people aside from you, it is not enough to write code that produces seemingly correct output in a few cases. You have to check that the software performs well in different conditions and with different input data, and if something goes wrong, the user is notified of this."
+- "This lesson focuses on intermediate skills and tools for making sure that your software is correct, reliable and fast."
 - "The lesson follows on from the novice Software Carpentry lesson, but this is not a prerequisite for
 attending as long as you have some basic Python, command line and Git skills and you have been using them for a
 while to write code to help with your work."
@@ -25,18 +23,16 @@ So, you have gained basic software development skills either by self-learning or
 e.g., a [novice Software Carpentry course][swc-lessons].
 You have been applying those skills for a while by writing code to help with your work
 and you feel comfortable developing code and troubleshooting problems.
-However, your software has now reached a point where there’s too much code to be kept in one script.
-Perhaps it's involving more researchers (developers) and users,
+However, your software has now reached a point when you have to use and maintain it during prolonged periods of time, or when you have to share it with other users who may apply it to different kinds of tasks or data. Perhaps your projects now involve more researchers (developers) and users,
 and more collaborative development effort is needed to add new functionality
 while ensuring previous development efforts remain functional and maintainable.
 
-This course provides the next step in software development -
-it teaches some **intermediate software engineering skills and best practices**
-to help you restructure existing code and design more robust,
-reusable and maintainable code,
-automate the process of testing and verifying software correctness
-and support collaborations with others in a way that
-mimics a typical software development process within a team.
+**This is a single-day course dedicated to basic software testing and profiling.**
+**The goals of testing**
+**The goals of profiling**
+**Importance for collaborative development**
+**Mandatory in big teams**
+
 
 The course uses a number of different **software development tools and techniques**
 interchangeably as you would in a real life.
@@ -59,66 +55,22 @@ The course is organised into the following sections:
 
 ![Course overview diagram](../fig/course-overview.png){: .image-with-shadow width="800px" }
 
-### [Section 1: Setting up Software Environment](../10-section1-intro/index.html)
-In the first section we are going to set up our working environment
-and familiarise ourselves with various tools and techniques for
-software development in a typical collaborative code development cycle:
+### [Section 1: Unit testing](../10-section1-intro/index.html)
+In the first section we are going to establish what is included in software testing and how we can perform the basic type of it, **unit testing**.
 
-- **Virtual environments** for **isolating a project** from other projects developed on the same machine
-- **Command line** for running code and interacting with the **command line tool Git** for
-- **Integrated Development Environment** for **code development, testing and debugging**,
-  **Version control** and using code branches to develop new features in parallel,
-- **GitHub** (central and remote source code management platform supporting version control with Git)
-  for **code backup, sharing and collaborative development**, and
-- **Python code style guidelines** to make sure our code is
-  **documented, readable and consistently formatted**.
-
-### [Section 2: Verifying Software Correctness at Scale](../20-section2-intro/index.html)
-Once we know our way around different code development tools, techniques and conventions,
-in this section we learn:
-
+- **Unit testing** for testing separate functions of the software
 - how to set up a **test framework** and write tests to verify the behaviour of our code is correct, and
 - how to automate and scale testing with **Continuous Integration (CI)** using
   **GitHub Actions** (a CI service available on GitHub).
 
-### [Section 3: Software Development as a Process](../30-section3-intro/index.html)
-In this section, we step away from writing code for a bit
-to look at software from a higher level as a process of development and its components:
+### [Section 2: Profiling](../20-section2-intro/index.html)
+Once we know our way around different code development tools, techniques and conventions,
+in this section we learn:
 
-- different types of **software requirements** and **designing and architecting software** to meet them,
-  how these fit within the larger **software development process**
-  and what we should consider when **testing** against particular types of requirements.
-- different **programming and software design paradigms**,
-  each representing a slightly different way of thinking about,
-  structuring
-  and **implementing** the code.
+- What is **profiling**
+- **Jupyter magicks** for performance time measurement
+- **SnakeViz** for resource profiling
 
-### [Section 4: Collaborative Software Development for Reuse](../40-section4-intro/index.html)
-Advancing from developing code as an individual,
-in this section you will start working with your fellow learners
-on a group project (as you would do when collaborating on a software project in a team), and learn:
-
-- how **code review** can help improve team software contributions,
-  identify wider codebase issues, and increase codebase knowledge across a team.
-- what we can do to prepare our software for further development and reuse,
-  by adopting best practices in
-  **documenting**,
-  **licencing**,
-  **tracking issues**,
-  **supporting** your software,
-  and **packaging software** for release to others.
-
-### [Section 5: Managing and Improving Software Over Its Lifetime](../50-section5-intro/index.html)
-Finally, we move beyond just software development to managing a collaborative software project and will look into:
-
-- internal **planning and prioritising tasks** for future development
-  using agile techniques and effort estimation,
-  management of **internal and external communication**,
-  and **software improvement** through feedback.
-- how to adopt a critical mindset not just towards our own software project
-  but also to **assess other people's software to ensure it is suitable** for us to reuse,
-  identify areas for improvement,
-  and how to use GitHub to register good quality issues with a particular code repository.
 
 ## Before We Start
 
