@@ -11,7 +11,7 @@ keypoints:
 - "***."
 ---
 
-## IPython Magics
+## IPython Magics for benchmarking
 
 Before discussing the most important tools for profiling, we are briefly introducing a more pedestrian approach to assess the runtime of a single code block. For this purpose we are going to use IPython Magics, which are part of the respective IPython kernel or specified by users. Either way, the command needs to be prefixed with at least one `%` symbol and can run various operations. A simple example is to list the files in the current working directory:
 
@@ -22,7 +22,7 @@ Before discussing the most important tools for profiling, we are briefly introdu
 On most operating systems you can execute the following function to analyze the runtime
 
 ~~~
-time python myscript.py
+$ time python myscript.py
 ~~~
 
 If we are using a juypyter notebook with an IPython kernel, the following the `%time` magic can be used which is used for timing code blocks. 
@@ -48,10 +48,16 @@ squares = [x**2 for x in range(7)]
 quadrupels = [x**4 for x in range(7)]
 ~~~
 
+The output of this reveals that after 7 runs with 100,000 the following measurement is available:
+
+~~~
+4.51 μs ± 16 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+~~~
+
 The pedestrian approach of using `%timeit` works for blocks of code but testing multiple functions, the number of calls and time it takes can be helpful. The goal is usually to identify the slowest function, but the difference between wall time and user CPU time can reveal that file operations with local or remote drives may be a limiting factor. On machines with limited RAM, we could also consider profiling memory usage. For this we can install more magic commands,, e.g. from [https://pypi.org/](https://pypi.org/)
 
 ~~~
-pip install ipython-memory-magics
+$ python -m pip install ipython-memory-magics
 ~~~
 
 and load the external memory magics via
@@ -68,15 +74,43 @@ squares = [x**2 for x in range(7777)]
 quadrupels = [x**4 for x in range(7777)]
 ~~~
 
+The output of this should look as follows:
+
+~~~
+RAM usage: cell: 590.7 KiB / 590.94 KiB
+~~~
+
+
 
 ## Resource profiling
 
--What is profiling?
+Profiling is the art of finding bottlenecks in a larger project to speed up computation as opposed to benchmarking different code blocks as shown before. This step can be critical to the success of a project, but it also has an environmental impact. High performance code can leave a significant carbon footprint. The trade-off between the time it takes to develop code and the cost of running the code itself motivates us to analyze projects in a more detailed fashion. The pedestrian approach is not a sustainable way of analyzing any larger project. Prioritizing development requires to understand
 
-Profiling is the art of finding bottlenecks in code to speed up computation. This step can be critical to the success of a project, but it also has an environmental impact. High performance code can leave a significant carbon footprint. The trade-off between the time it takes to develop code and the cost of running the code itself motivates us to analyze projects in a more detailed fashion.
+* How often a function is called 
+* How long it takes to run a certain function
+* Identify bottlenecks and gauge how involved a change is compared to the development effort
 
-- What is profiling
-- What kinds of resources can we measure
+To accomplish this we use `cProfile` to prepare the performance statistics and install and use `snakeviz` to visualize the statistics in a more user friendly way.
+
+~~~
+$ python -m pip install snakeviz
+~~~
+
+The statistics of `myscript.py` can be produced by calling
+
+~~~
+$ python -m cProfile -o output.stats myscript.py
+
+~~~
+
+An interactive view can be produced using
+
+~~~
+$ snakeviz output.stats
+~~~
+
+This can be interpreted as...
+
 - What are the complications
 - Main tools
 - Using SnakeViz
