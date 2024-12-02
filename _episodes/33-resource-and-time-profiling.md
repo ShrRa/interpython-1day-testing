@@ -60,7 +60,7 @@ The pedestrian approach of using `%timeit` works for blocks of code but testing 
 $ python -m pip install ipython-memory-magics
 ~~~
 
-and load the external memory magics via
+and load the external memory magic via
 
 ~~~
 %load_ext memory_magics
@@ -71,7 +71,7 @@ Now we can analyze the memory usage in our cell
 ~~~
 %%memory
 squares = [x**2 for x in range(7777)]
-quadrupels = [x**4 for x in range(7777)]
+quadruples = [x**4 for x in range(7777)]
 ~~~
 
 The output of this should look as follows:
@@ -109,10 +109,19 @@ An interactive view can be produced using
 $ snakeviz output.stats
 ~~~
 
-This can be interpreted as...
+and will start in your browser. One way to interpret is to use the table which is particularly useful to inspect the number of function calls and the elapsed time per function call. We are again using our `squares` and `quadruples` functions to illustrate how the output looks like. The table is interactive and can be sorted by any column:
 
-- What are the complications
-- Main tools
-- Using SnakeViz
+![Snakeviz table](../fig/33_snakeviz_table.png){: .image-with-shadow width="800px"}
+
+The top part of the snakeviz page illustrates the function name as icicle with cumulative times as callstack and the respective line number:
+
+![Snakeviz icicle](../fig/33_snakeviz_icicle.png){: .image-with-shadow width="800px"}
+
+Alternatively a clickable sunburst diagram can be selected:
+
+![Snakeviz sunburst](../fig/33_snakeviz_sunburst.png){: .image-with-shadow width="800px"}
+
+Both diagrams can be interpreted depending on the aformentioned use case, i.e. if the total runtime is in focus or if a single function should be optimized - a decision to be made after exploring the used ressources. 
+
 
 {% include links.md %}
