@@ -95,6 +95,7 @@ To accomplish this we can use `cProfile` to prepare the performance statistics a
 $ python -m pip install snakeviz
 ~~~
 
+
 The statistics of `myscript.py` can be produced by calling
 
 ~~~
@@ -121,7 +122,22 @@ Alternatively a clickable sunburst diagram can be selected:
 
 Both diagrams can be interpreted depending on the aformentioned use case, i.e. if the total runtime is in focus or if a single function should be optimized - a decision to be made after exploring the used ressources. 
 
-Depending on the project it can be more convenient to run the profiler directly as part of the main code. In the following we will provide a simple example how to prepare the profiling inside the 
+
+
+Depending on the project it can be more convenient to run the profiler directly inside a jupyter-notebook or as part of the main code. To use the snakeviz tool also as magic command we need to load the external snakeviz magic:
+
+~~~
+%load_ext snakeviz
+~~~
+
+and test it using our example
+
+~~~
+def squares(n):
+    squares = [x**2 for x in range(n)]
+
+%snakeviz squares(777)
+~~~
 
 ...
 
