@@ -31,7 +31,7 @@ If we are using a juypyter notebook with an IPython kernel, the following the `%
 %time [x**2 for x in range(7777777)]
 ~~~
 
-It reports the so-called wall clock time, i.e. the elapsed actual time, but also the user CPU time. The single `%` symbol means that `%time` is applied to single cell. To apply magic commands to a whole cell, we use `%%` 
+It reports the so-called wall clock time, i.e. the elapsed actual time, but also the user CPU time. The single `%` symbol means that `%time` is applied to single cell. To apply magic commands to an entire cell, we use `%%` 
 
 ~~~
 %%time 
@@ -47,6 +47,27 @@ Depending on the structure of the datas ets in question or if stochastic process
 squares = [x**2 for x in range(7)]
 quadrupels = [x**4 for x in range(7)]
 ~~~
+
+The pedestrian approach of using `%timeit` works for blocks of code but testing multiple functions, the number of calls and time it takes can be helpful. The goal is usually to identify the slowest function, but the difference between wall time and user CPU time can reveal that file operations with local or remote drives may be a limiting factor. On machines with limited RAM, we could also consider profiling memory usage. For this we can install more magic commands,, e.g. from [https://pypi.org/](https://pypi.org/)
+
+~~~
+pip install ipython-memory-magics
+~~~
+
+and load the external memory magics via
+
+~~~
+%load_ext memory_magics
+~~~
+
+Now we can analyze the memory usage in our cell
+
+~~~
+%%memory
+squares = [x**2 for x in range(7777)]
+quadrupels = [x**4 for x in range(7777)]
+~~~
+
 
 ## Resource profiling
 
