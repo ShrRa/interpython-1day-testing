@@ -1,5 +1,5 @@
 ---
-title: "Section 2: Automatizing code quality checks"
+title: "Section 3: Automatizing code quality checks"
 colour: "#fafac8"
 start: true
 teaching: 5
