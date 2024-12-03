@@ -1,8 +1,8 @@
 ---
 title: "Measuring time and computational resources required by the software"
 start: false
-teaching: 15
-exercises: 10
+teaching: 20
+exercises: 5
 questions:
 - "***"
 objectives:
@@ -19,7 +19,7 @@ Before discussing the most important tools for profiling, we are briefly introdu
 %ls
 ~~~
 
-On most operating systems you can execute the following function to analyze the runtime
+On most operating systems you can execute the following function to analyze the runtime:
 
 ~~~
 $ time python myscript.py
@@ -31,7 +31,7 @@ If we are using a juypyter notebook with an IPython kernel, the following the `%
 %time [x**2 for x in range(7777777)]
 ~~~
 
-It reports the so-called wall clock time, i.e. the elapsed actual time, but also the user CPU time. The single `%` symbol means that `%time` is applied to single cell. To apply magic commands to an entire cell, we use `%%` 
+It reports the so-called wall clock time, i.e. the elapsed actual time, but also the user CPU time. The single `%` symbol means that `%time` is applied to single cell. To apply magic commands to an entire cell, we use `%%`:
 
 ~~~
 %%time 
@@ -39,8 +39,7 @@ squares = [x**2 for x in range(7777777)]
 quadrupels = [x**4 for x in range(7777777)]
 ~~~
 
-Depending on the structure of the datas ets in question or if stochastic processes are involved, the runtime of a code block may vary. As a side-remark, if you develop code running on a spacecraft, you want to avoid unpredictable runtime at all cost. To get a better measurement, `%%timeit` comes with extra options to test a block multiple times, which also allows us to get a mean and standard deviation. 
-
+Depending on the structure of the datas ets in question or if stochastic processes are involved, the runtime of a code block may vary. As a side-remark, if you develop code running on a spacecraft, you want to avoid unpredictable runtime at all cost. To get a better measurement, `%%timeit` comes with extra options to test a block multiple times, which also allows us to get a mean and standard deviation:
 
 ~~~
 %%timeit
@@ -83,48 +82,47 @@ RAM usage: cell: 590.7 KiB / 590.94 KiB
 
 ## Resource profiling with offline profilers
 
-Profiling is the art of finding bottlenecks in a larger project to speed up computation as opposed to benchmarking different code blocks as shown before. This step can be critical to the success of a project, but it also has an environmental impact. High performance code can leave a significant carbon footprint. The trade-off between the time it takes to develop code and the cost of running the code itself motivates us to analyze projects in a more detailed fashion. The pedestrian approach is not a sustainable way of analyzing any larger project. Prioritizing development requires to understand
+Profiling is the essential technique for identifying bottlenecks and optimize performance in larger projects. This process can significantly impact both the success of a project and its environmental footprint, as high-performance code may consume more resources and energy. Finding a balance between the time it takes to develop code and the cost of running the code itself motivates us to analyze projects in a more detailed fashion. Relying on the pedestrian approach in the last section can be useful for benchmarking smaller blocks of code, but it is not a sustainable approach for larger projects. Prioritizing development requires to understand
 
-* How often a function is called 
-* How long it takes to run a certain function
+* The frequency at which a function is called
+* The execution time for each function
+* The performance of different algorithms 
+* Benchmarking pure python vs external C code
 * Identify bottlenecks and gauge how involved a change is compared to the development effort
 
-To accomplish this we can use `cProfile` to prepare the performance statistics and utilize `snakeviz` to visualize the statistics in a more user friendly way.
+As a rule of thumb, software developers tend to profile work on improving 10 to 20% of their codebase. To accomplish this we can use `cProfile` to prepare the performance statistics and utilize `snakeviz` to visualize the statistics in a more user friendly way. To install `snakeviz` run
 
 ~~~
 $ python -m pip install snakeviz
 ~~~
 
 
-The statistics of `myscript.py` can be produced by calling
+You can generate performance statistics for a script `myscript.py` using `cProfile` with the following command:
 
 ~~~
 $ python -m cProfile -o output.stats myscript.py
 ~~~
 
-An interactive view can be produced using
+An interactive view of these statistics can be obtained by running:
 
 ~~~
 $ snakeviz output.stats
 ~~~
 
-which will start in your browser. One way to interpret is to use the table which is particularly useful to inspect the number of function calls and the elapsed time per function call. We are again using our `squares` and `quadruples` functions to illustrate how the output looks like. The table is interactive and can be sorted by any column. It also tells us that the list comprehension can be traced separately.
+This will open in your browser, showing an interactive table that is particularly useful for inspecting the number of function calls and elapsed time per function call (among other metrics). We are using our `squares` and `quadruples` functions to illustrate how the output looks like. The table can be sorted by any column. Performance statistics show not only your functions, but also functions from the standard library, e.g. list comprehensions are shown separately. 
 
-![Snakeviz table](../fig/33_snakeviz_table.png){: .image-with-shadow width="800px"}
+![Snakeviz table](../fig/33_snakeviz_table.png){: .image-with-shadow}
 
-The top part of the snakeviz page illustrates the function name as icicle with cumulative times as callstack and the respective line number:
+Two visualization options are available: an icicle view, which displays the function calls as cumulative timings icicles with corresponding line numbers, and a sunburst diagram, both of which allow you to explore the call hierarchy.
 
-![Snakeviz icicle](../fig/33_snakeviz_icicle.png){: .image-with-shadow width="800px"}
+![Snakeviz icicle](../fig/33_snakeviz_icicle.png){: .image-with-shadow }
 
-Alternatively a clickable sunburst diagram can be selected:
+The sunburst diagram looks as follows:
 
-![Snakeviz sunburst](../fig/33_snakeviz_sunburst.png){: .image-with-shadow width="800px"}
+![Snakeviz sunburst](../fig/33_snakeviz_sunburst.png){: .image-with-shadow}
 
-Both diagrams can be interpreted depending on the aformentioned use case, i.e. if the total runtime is in focus or if a single function should be optimized - a decision to be made after exploring the used ressources. 
-
-
-
-Depending on the project it can be more convenient to run the profiler directly inside a jupyter-notebook or as part of the main code. To use the snakeviz tool also as magic command we need to load the external snakeviz magic:
+ 
+ If you prefer to run the profiler directly within a Jupyter Notebook, you need to load the external snakeviz magic:
 
 ~~~
 %load_ext snakeviz
@@ -139,19 +137,53 @@ def squares(n):
 %snakeviz squares(777)
 ~~~
 
-...
+Based on the output, we would mention a tool providing call graphs in passing: [gprof2dot](https://pypi.org/project/gprof2dot/) can be used to plot call graphs in the following way, which some users could find more intuitive than the default `snakeviz` plots:
 
+ ![gprof2dot example](../fig/33_gprof2dot.png){: .image-with-shadow}
+ 
+We would like to conclude this session by illustrating how you can integrate and run the `cProfile` profiler into your main code, and we are testing two calls of our function squares
+
+~~~
+from cProfile import Profile
+profiler = Profile()
+
+profiler.run('squares(777777); squares(777777)')
+profiler.disable()
+profiler.print_stats(sort='cumulative')
+~~~
+
+this should return a list as follows which can also be written to disk using `profiler.dump_stats(filename)`:
+
+~~~
+ 7 function calls in 0.522 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.522    0.522 {built-in method builtins.exec}
+        1    0.011    0.011    0.522    0.522 <string>:1(<module>)
+        2    0.000    0.000    0.511    0.256 890459632.py:5(squares)
+        2    0.511    0.256    0.511    0.256 890459632.py:6(<listcomp>)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+~~~
 
 > ## Optional Exercise: Profile lightcurve
 >
 > Try to profile the methods devised for lightcurve analysis. 
 >
+> > ## Solution
+> > tbd
+> {: .solution}
+> 
 {: .challenge}
+
 
 ## Resource profiling with online profilers
 
-Profiling a running project can be the best way of identifying issues, since it catches unusual events. This course does not cover online profiling but repositories like [py-spy](https://github.com/benfred/py-spy) or [pyinstrument](https://github.com/joerick/pyinstrument)
- can be a good starting point for further reading.
+Profiling a running project can be an invaluable tool for identifying and addressing issues, as it catches unusual events that may not be obvious during development. While this course focuses on offline profiling techniques using tools like `cProfile` and `snakeviz`, we would like to mention that monitoring performance in real-time can be crucial for certain projects. In this context, we would like to highlight two repositories as starting points for further reading:
+
+1. [py-spy](https://github.com/benfred/py-spy)
+2. [pyinstrument](https://github.com/joerick/pyinstrument)
 
 
 {% include links.md %}
