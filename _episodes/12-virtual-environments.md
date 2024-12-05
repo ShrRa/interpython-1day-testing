@@ -6,9 +6,11 @@ exercises: 0
 questions:
 - "What are virtual environments in software development and why you should use them?"
 - "How can we manage Python virtual environments and external (third-party) libraries?"
+- "What IDEs can we use for more convenient code development?"
 objectives:
 - "Set up a Python virtual environment for our software project using `venv` and `pip`."
 - "Run our software from the command line."
+- "Obtain Jupyter Lab IDE."
 
 keypoints:
 - "Virtual environments keep Python versions and dependencies required by different projects separate."
@@ -26,11 +28,11 @@ the `requirements.txt` file."
 So far we have cloned our software project from GitHub and inspected its contents and architecture a bit.
 We now want to run our code to see what it does -
 let's do that from the command line.
-For the most part of the course we will run our code
+For the most part of the course we will develop the code using an IDE Jupyter Lab,
 and interact with Git from the command line.
-While we will develop and debug our code using the Jupyter Lab
-and it is possible to use Git with a Jupyter Lab extension (and many other IDEs have built-in functionality for this too),
-typing commands in the command line allows you to familiarise yourself and learn it well. Running Git from the command line does not depend on the IDE and for the most part, uses the same commands in different OS, so it is the most universal way of using it.
+While it is possible to use Git with a Jupyter Lab extension (and many other IDEs have built-in functionality for this too),
+typing commands in the command line allows you to familiarise yourself and learn it well. 
+Running Git from the command line does not depend on the IDE and for the most part, uses the same commands in different OS, so it is the most universal way of using it.
 
 If you have a little peek into our code
 (e.g. run `cat lcanalyzer/views.py` from the project root),
@@ -55,7 +57,7 @@ or a specific version of Python interpreter.
 This means that each Python application you work with may require a different setup
 and a set of dependencies so it is useful to be able to keep these configurations
 separate to avoid confusion between projects.
-The solution for this problem is to create a self-contained
+The solution to this problem is to create a self-contained
 *virtual environment* per project,
 which contains a particular version of Python installation
 plus a number of additional external libraries.
@@ -69,12 +71,10 @@ In this episode, we learn how to set up a virtual environment to develop our cod
 and manage our external dependencies.
 
 ## Virtual Environments
-So what exactly are virtual environments, and why use them?
 
 A Python virtual environment helps us create an **isolated working copy** of a software project
 that uses a specific version of Python interpreter
-together with specific versions of a number of external libraries
-installed into that virtual environment.
+together with specific versions of external libraries.
 Python virtual environments are implemented as
 directories with a **particular structure** within software projects,
 containing links to specified dependencies
@@ -107,6 +107,9 @@ the use of virtual environments is highly recommended (almost unavoidable):
   without affecting the working version of your project.
   You need to set up a separate virtual environment for your branch to
   'isolate' your code while testing the new feature.
+- You often work on the code developed by others. Everyone will have their own set of libraries installed,
+  and some developers may have different versions of the same library. Trying to run someone's code
+  with the wrong version of a library will cause issues.
 
 You do not have to worry too much about specific versions of external libraries
 that your project depends on most of the time.
@@ -115,7 +118,7 @@ the latest available version without specifying it explicitly.
 They also enable you to use a specific older version of a package for your project, should you need to.
 
 > ## A Specific Python or Package Version is Only Ever Installed Once
-> Note that you will not have a separate Python or package installations for each of your projects -
+> Note that you will not have separate Python or package installations for each of your projects -
 > they will only ever be installed once on your system but will be referenced
 > from different virtual environments.
 >
@@ -206,9 +209,9 @@ However, the advantages of using Anaconda and `conda` are that
 you get (most of the) packages needed for scientific code development included with the distribution.
 If you are only collaborating with others who are also using Anaconda,
 you may find that `conda` satisfies all your needs.
-It is good, however, to be aware of all these tools, and use them accordingly.
-As you become more familiar with them you will realise that
-equivalent tools work in a similar way even though the command syntax may be different
+
+As you become more familiar with different tools you will realise that
+they work in a similar way even though the command syntax may be different
 (and that there are equivalent tools for other programming languages too
 to which your knowledge can be ported).
 
