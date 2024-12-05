@@ -2,7 +2,7 @@
 title: "Setting the Scene"
 start: false
 colour: "#FBED65"
-teaching: 15
+teaching: 10
 exercises: 0
 questions:
 - "What are we teaching in this course?"
