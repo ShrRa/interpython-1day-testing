@@ -1,23 +1,18 @@
 ---
-title: "Issue Diagnostics with a Debugger and Other Tools"
+title: "Test Driven Development and Defensive Programming"
 teaching: 30
 exercises: 20
 questions:
 - "Once we know our program has errors, how can we locate them in the code?"
 - "How can we make our programs more resilient to failure?"
 objectives:
-- "Use a debugger to explore behaviour of a running program"
 - "Describe and identify edge and corner test cases and explain why they are important"
 - "Apply error handling and defensive programming techniques to improve robustness of a program"
-- "Integrate linting tool style checking into a continuous integration job"
+- "Learn what Test Driven Development is"
 keypoints:
-- "Unit testing can show us what does not work, but does not help us locate problems in code."
-- "Use a **debugger** to help you locate problems in code."
-- "A **debugger** allows us to pause code execution and examine its state by adding **breakpoints** to lines in code."
 - "Use **preconditions** to ensure correct behaviour of code."
 - "Ensure that unit tests check for **edge** and **corner cases** too."
-- "Using linting tools to automatically flag suspicious programming language constructs and stylistic errors
-can help improve code robustness."
+- "Write tests before the code itself to think of the functionality and desired behaviour in advance."
 ---
 
 ## Introduction
@@ -298,6 +293,42 @@ def normalize_lc(df,mag_col):
 ~~~
 {: .language-python}
 
+## Test Driven Development
+
+In the [previous episode](../21-automatically-testing-software/index.html#what-is-software-testing)
+we learnt how to create *unit tests* to make sure our code is behaving as we intended.
+**Test Driven Development** (TDD) is an extension of this.
+If we can define a set of tests for everything our code needs to do,
+then why not treat those tests as the specification.
+
+When doing Test Driven Development,
+we write our tests first and only write enough code to make the tests pass.
+We tend to do this at the level of individual features -
+define the feature,
+write the tests,
+write the code.
+The main advantages are:
+
+- It forces us to think about how our code will be used before we write it
+- It prevents us from doing work that we don't need to do, e.g. "I might need this later..."
+- It forces us to test that the tests _fail_ before we've implemented the code, meaning we
+   don't inadvertently forget to add the correct asserts.
+
+You may also see this process called **Red, Green, Refactor**:
+'Red' for the failing tests,
+'Green' for the code that makes them pass,
+then 'Refactor' (tidy up) the result.
+
+For the challenges from here on,
+try to first convert the specification into a unit test,
+then try writing the code to pass the test.
+
+> ## TDD exercise
+>
+> TDD exercise
+>
+{: .challenge}
+
 ## Defensive Programming
 
 In the previous section, we made a few design choices for our `normalize_lc` function:
@@ -454,5 +485,33 @@ and instead state the assumptions and limitations of your code
 for users of your code in the docstring
 and rely on them to invoke your code correctly.
 This approach is useful when explicitly checking the precondition is too costly.
+
+## Limits to Testing
+
+Like any other piece of experimental apparatus,
+a complex program requires a much higher investment in testing than a simple one.
+Putting it another way,
+a small script that is only going to be used once,
+to produce one figure,
+probably doesn't need separate testing:
+its output is either correct or not.
+A linear algebra library that will be used by
+thousands of people in twice that number of applications over the course of a decade,
+on the other hand, definitely does.
+The key is identify and prioritise against
+what will most affect the code's ability to generate accurate results.
+
+It's also important to remember that unit testing cannot catch every bug in an application,
+no matter how many tests you write.
+To mitigate this manual testing is also important.
+Also remember to test using as much input data as you can,
+since very often code is developed and tested against the same small sets of data.
+Increasing the amount of data you test against - from numerous sources -
+gives you greater confidence that the results are correct.
+
+Our software will inevitably increase in complexity as it develops.
+Using automated testing where appropriate can save us considerable time,
+especially in the long term,
+and allows others to verify against correct behaviour.
 
 {% include links.md %}
