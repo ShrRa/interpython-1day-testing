@@ -1,6 +1,6 @@
 ---
 title: "Introduction to Our Software Project"
-teaching: 20
+teaching: 15
 exercises: 10
 questions:
 - "How to obtain software project we will be working on?"
