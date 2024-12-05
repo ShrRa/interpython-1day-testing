@@ -3,16 +3,16 @@ title: "Introduction to Our Software Project"
 teaching: 20
 exercises: 10
 questions:
-- "How to set up the virtual environment and IDE?"
 - "How to obtain software project we will be working on?"
 - "What is the structure of our software project?"
 objectives:
 - "Use Git to obtain a working copy of our software project from GitHub."
 - "Inspect the structure and architecture of our software project."
-- "Familiarize ourselves with virtual enviroment management and Jupyter Lab IDE."
 
 keypoints:
-- "---"
+- "Using Git and Github, we can share our code with others and obtain our own copies of others' projects."
+- "The structure of the software project is defined by its purposes and requirements."
+- "Separation of concerns is one of the most basic principles when deciding on software architecture."
 
 ---
 
@@ -67,15 +67,15 @@ and then obtain a local copy of that project (from your GitHub) on your machine.
    and set the name of the project to `InterPython_Workshop_Example`
    (you can call it anything you like,
    but it may be easier for future group exercises if everyone uses the same name).
-   Also set the new repository's visibility to 'Public' -
-   so it can be seen by others and by third-party Continuous Integration (CI) services
-   (to be covered later on in the course) and select the `Copy the main branch only` checkbox.
+   For this workshop, set the new repository's visibility to 'Public' -
+   In this case, it can be seen by others. Select the `Copy the main branch only` checkbox,
+   since you will be creating additional branches by yourself.
 
    ![Making a copy of the software project template repository in GitHub](../fig/11_soft_proj_3_repo.svg){: .image-with-shadow width="600px" }
 
-6. Click the `Create fork` button
+7. Click the `Create fork` button
    and wait for GitHub to import the copy of the repository under your account.
-7. Locate the forked repository under your own GitHub account. GitHub should redirect you there
+8. Locate the forked repository under your own GitHub account. GitHub should redirect you there
    automatically after creating the fork. If this does not happen, click your user icon in the top
    right corner and select Your Repositories from the drop-down menu, then locate your newly created fork.
 
@@ -228,6 +228,7 @@ are bigger modules that contain several smaller sub-modules.
 Another example of modules are classes in object-oriented programming languages.
 
 ### Model-View-Controller (MVC) Architecture
+For our project, we are using Model-View-Controller (MVC) Architecture. 
 MVC architecture divides the related program logic
 into three interconnected modules:
 
@@ -238,15 +239,13 @@ into three interconnected modules:
 **Model** represents the data used by a program and also contains operations/rules
 for manipulating and changing the data in the model.
 This may be a database, a file, a single data object or a series of objects -
-for example a table representing light curve observations.
+for example, a table representing light curve observations.
 
 **View** is the means of displaying data to users/clients within an application
-(i.e. provides visualisation of the state of the model).
-For example, displaying a window with input fields and buttons (Graphical User Interface, GUI)
-or textual options within a command line (Command Line Interface, CLI) are examples of Views.
+(i.e., by providing visualisation of the state of the model).
+For example, displaying a window with input fields and buttons (Graphical User Interface, GUI),
+textual options within a command line (Command Line Interface, CLI) or plots are examples of Views.
 They include anything that the user can see from the application.
-While building GUIs is not the topic of this course,
-we will cover building CLIs in Python in later episodes.
 
 **Controller** manipulates both the **Model** and the **View**.
 It accepts input from the **View**
@@ -273,8 +272,7 @@ and then modifies the **View** by displaying the updated profile back to the use
 
 #### Our Project's MVC Architecture
 
-Our software project uses the MVC architecture.
-The file `light-curve-analysis.ipynb` is the **Controller** module
+In our case, the file `light-curve-analysis.ipynb` is the **Controller** module
 that performs basic statistical analysis over light curve data
 and provides the main entry point of the code.
 The **View** and **Model** modules are contained in the files `views.py` and `models.py`, respectively,
@@ -282,12 +280,16 @@ and are conveniently named.
 Data underlying the **Model** is contained within the directory `data` -
 as we have seen already it contains several files with light curves.
 
-We will revisit the software architecture and MVC topics once again in later episodes
-when we talk in more detail about 
-[software's requirements](../31-software-requirements/index.html)
-and [software design](../32-software-design/index.html).
+> ## Further reading
+> If you want to learn more about software architecture and MVC topics,
+> you can look into the corresponding episodes of the previous InterPython workshops: 
+> [software's requirements](../31-software-requirements/index.html)
+> and [software design](../32-software-design/index.html).
+>
+{: .callout}
+
 We now proceed to set up our virtual development environment
-and start working with the code using a more convenient graphical tool -
+and start working with the code using an
 [IDE Jupyter Lab](https://jupyter.org/).
 
 {% include links.md %}
