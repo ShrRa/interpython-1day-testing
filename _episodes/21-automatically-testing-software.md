@@ -111,14 +111,14 @@ Let's go back to our [lightcurve analysis software project](/python-intermediate
 Recall that it contains a `data` directory, where we have observations of presumably variable stars, namely RR Lyrae candidates, coming
 from two sources: the Kepler Space Telescope and LSST Data Preview 0. 
 
-> ## Don't forget about the best practices
+> ## Don't forget about the structure
 >
-> Following the best practices from [the corresponding section](/python-intermediate-development/14-jup-best-practices/index.html),
-> let's start with creating a new notebook and drafting its structure.
+> There are some best practices recommended when working with Jupyter Notebooks, and one of those is to
+> draft the structure of your notebook in advance. Let's start with exactly this:
 > Using headers in the markdown cells, determine the sections of your notebook.
 > 
 > > ## Solution
-> > We can start with the following sections:
+> > A possible structure can look like this:
 > > 1. Imports
 > > 2. Params
 > > 3. Data loading
@@ -136,7 +136,6 @@ from two sources: the Kepler Space Telescope and LSST Data Preview 0.
 Now let's open our data and have a look at it. For this we will use `pandas` package.
 Import it, open the `lsst_RRLyr.pkl` catalogue and have a look at the format of this table.
 Don't forget to put your code in the sections where it belongs!
-
 ~~~
 import pandas as pd
 ~~~
@@ -204,7 +203,7 @@ for b in bands:
 > ## Don't forget about the best practices
 >
 > Do you see any variables defined in the code above that
-> you should move in some other section?
+> you may need later? Is it worth defining them somewhere else?
 > > ## Solution
 > >
 > > It seems very likely that we will need the variable `bands`
@@ -368,7 +367,7 @@ $ python -m pip install pytest
 > option, however [pytest has many distinct advantages](https://realpython.com/pytest-python-testing/#what-makes-pytest-so-useful), 
 > particularly for learning, including:
 >
-> - unittest requires additional knowledge of object-oriented frameworks (covered later in the course) 
+> - unittest requires additional knowledge of object-oriented paradigm
 > to write unit tests, whereas in pytest these are written in simpler functions so is easier to learn
 > - Being written using simpler functions, pytest's scripts are more concise and contain less boilerplate, and thus are
 > easier to read
@@ -376,8 +375,9 @@ $ python -m pip install pytest
 > - pytest has a vast ecosystem of plugins available if ever you need additional testing functionality
 > - unittest-style unit tests can be run from pytest out of the box!
 >
-> A common challenge, particularly at the intermediate level, is the selection of a suitable tool from many alternatives
-> for a given task. Once you've become accustomed to object-oriented programming you may find unittest a better fit
+> You can have a look at the tests written with pytest and unittest in the
+> [pandas](https://github.com/pandas-dev/pandas/tree/main/pandas/tests) and LSST [rubin_sim](https://github.com/lsst/rubin_sim/tree/main/tests)
+> repositories correspondingly. Once you've become accustomed to object-oriented programming you may find unittest a better fit
 > for a particular project or team, so you may want to revisit it at a later date!
 >
 {: .callout}
