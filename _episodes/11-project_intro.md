@@ -18,7 +18,7 @@ keypoints:
 
 ## Light Curve Analysis Project
 For this workshop, let's assume that you  have joined a software development team that has been working on the
-[light curve analysis project](https://github.com/ShrRa/InterPython_Workshop_Example)
+[light curve analysis project](https://github.com/ShrRa/InterPython_SoftProject_1day_Testing)
 developed in Python and stored on GitHub. The purpose of this software is to analyze the variability of astronomical sources, 
 using observations that come from different instruments. 
 
