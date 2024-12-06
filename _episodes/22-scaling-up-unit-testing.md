@@ -266,8 +266,7 @@ $ git push origin test-suite
 >
 > What if your implementation depends on a degree of random behaviour?
 > This can be desired within a number of applications,
-> particularly in simulations (for example, molecular simulations)
-> or other stochastic behavioural models of complex systems.
+> particularly in simulations or machine learning.
 > So how can you test against such systems if the outputs are different when given the same inputs?
 >
 > One way is to *remove the randomness* during testing.
