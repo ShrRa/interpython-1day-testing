@@ -111,29 +111,7 @@ Let's go back to our [lightcurve analysis software project](/interpython_1day_te
 Recall that it contains a `data` directory, where we have observations of presumably variable stars, namely RR Lyrae candidates, coming
 from two sources: the Kepler Space Telescope and LSST Data Preview 0. 
 
-> ## Don't forget about the structure
->
-> There are some best practices recommended when working with Jupyter Notebooks, and one of those is to
-> draft the structure of your notebook in advance. Let's start with exactly this:
-> Using headers in the markdown cells, determine the sections of your notebook.
-> 
-> > ## Solution
-> > A possible structure can look like this:
-> > 1. Imports
-> > 2. Params
-> > 3. Data loading
-> > 4. Data inspection
-> > 5. Selecting light curves for a single object
-> > 6. Trying the model.py functions
-> > 7. Test development
-> > 
-> > If we need something else, we can always add it later.
-> > 
-> {: .solution}
-> 
-{: .challenge}
-
-Now let's open our data and have a look at it. For this we will use `pandas` package.
+Let's open our data and have a look at it. For this we will use `pandas` package.
 Import it, open the `lsst_RRLyr.pkl` catalogue and have a look at the format of this table.
 Don't forget to put your code in the sections where it belongs!
 ~~~
@@ -200,20 +178,6 @@ for b in bands:
 ~~~
 {: .language-python}
 
-> ## Don't forget about the best practices
->
-> Do you see any variables defined in the code above that
-> you may need later? Is it worth defining them somewhere else?
-> > ## Solution
-> >
-> > It seems very likely that we will need the variable `bands`
-> > many times in the future. Let's move it to the 'Parameters'
-> > section of the notebook.
-> > 
-> {: .solution}
-> 
-{: .challenge}
-
 Have a look at the resulting dictionary: you will find that each element
 has a key corresponding to the band name, and it's value will contain a Pandas DataFrame with
 observations in this band.
@@ -239,24 +203,18 @@ models.max_mag(lc['g'],'psfMag')
 ~~~
 {: .output}
 
-> ## Don't forget about the best practices
-> Do you see anything in the code we just typed that can be put in the 'Parameters'?
-> 
-> > ## Solution
-> > 
-> > It is better to put
-> > the magnitude column name, 'psfMag', in a variable (let's call it `colname_mag`) and
-> > declare it in the 'Parameters' section. Why? Because chances are, in the future
-> > we will want to apply our code to another dataset with different column names,
-> > and if we continue using 'psfMag' across the notebook, later on we'll have to replace it
-> > either manually, or using 'Search' functionality. In a large notebook both actions are likely
-> > to produce errors.
-> > 
-> {: .solution}
->
-{: .challenge}
-
 How would you check if our `max_mag` function works correctly?
+
+
+> ## Don't forget about the best practices
+> There are some best practices recommended when working with Jupyter Notebooks,
+> and one of those is to draft the structure of your notebook in advance.
+> When you work on something new, e.g. testing, put it into a separate section.
+> It usually a good idea to plan the structure of your notebook in advance,
+> and even use separate notebooks for different stages of your work. For now,
+> put the experiments with testing into a separate section of the notebook.
+>
+{: .callout}
 
 The answer that just came to your head, in all likelyhood, sounds similar
 to this: "I would pass a simple DataFrame to this function and check manually
