@@ -32,8 +32,6 @@ so we should try and employ such practices early on.
 We will also make use of techniques and infrastructure that allow us to do this
 in a scalable, automated and more performant way as our codebase grows.
 
-![Tools for scaled software testing](../fig/section2-overview.png){: .image-with-shadow width="800px" }
-
 In this section we will:
 
 - Make use of a **test framework** called Pytest,
