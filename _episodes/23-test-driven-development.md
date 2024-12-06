@@ -10,13 +10,10 @@ objectives:
 - "Apply defensive programming techniques to improve robustness of a program"
 - "Learn what Test Driven Development is"
 keypoints:
-- "Use **preconditions** to ensure correct behaviour of code."
 - "Ensure that unit tests check for **edge** and **corner cases** too."
+-  "Use **preconditions** to ensure correct behaviour of code."
 - "Write tests before the code itself to think of the functionality and desired behaviour in advance."
 ---
-
-## Introduction
-
 
 ## Corner or Edge Cases
 
@@ -139,42 +136,6 @@ def normalize_lc(df,mag_col):
 ...
 ~~~
 {: .language-python}
-
-## Test Driven Development
-
-In the [previous episode](../21-automatically-testing-software/index.html#what-is-software-testing)
-we learnt how to create *unit tests* to make sure our code is behaving as we intended.
-**Test Driven Development** (TDD) is an extension of this.
-If we can define a set of tests for everything our code needs to do,
-then why not treat those tests as the specification.
-
-When doing Test Driven Development,
-we write our tests first and only write enough code to make the tests pass.
-We tend to do this at the level of individual features -
-define the feature,
-write the tests,
-write the code.
-The main advantages are:
-
-- It forces us to think about how our code will be used before we write it
-- It prevents us from doing work that we don't need to do, e.g. "I might need this later..."
-- It forces us to test that the tests _fail_ before we've implemented the code, meaning we
-   don't inadvertently forget to add the correct asserts.
-
-You may also see this process called **Red, Green, Refactor**:
-'Red' for the failing tests,
-'Green' for the code that makes them pass,
-then 'Refactor' (tidy up) the result.
-
-For the challenges from here on,
-try to first convert the specification into a unit test,
-then try writing the code to pass the test.
-
-> ## TDD exercise
->
-> TDD exercise
->
-{: .challenge}
 
 ## Defensive Programming
 
@@ -332,6 +293,38 @@ and instead state the assumptions and limitations of your code
 for users of your code in the docstring
 and rely on them to invoke your code correctly.
 This approach is useful when explicitly checking the precondition is too costly.
+
+## Test Driven Development
+
+In the previous episodes
+we learnt how to create *unit tests* to make sure our code is behaving as we intended.
+**Test Driven Development** (TDD) is an extension of this.
+If we can define a set of tests for everything our code needs to do,
+then why not treat those tests as the specification.
+
+With Test Driven Development,
+the idea is to write our tests first and only write enough code to make the tests pass.
+It is done at the level of individual features -
+define the feature,
+write the tests,
+write the code.
+The main advantages are:
+
+- It forces us to think about how our code will be used before we write it
+- It prevents us from doing work that we don't need to do, e.g. "I might need this later..."
+- It forces us to test that the tests _fail_ before we've implemented the code, meaning we
+   don't inadvertently forget to add the correct asserts.
+
+You may also see this process called **Red, Green, Refactor**:
+'Red' for the failing tests,
+'Green' for the code that makes them pass,
+then 'Refactor' (tidy up) the result.
+
+> ## Trying the TDD approach
+>
+> TDD exercise
+>
+{: .challenge}
 
 ## Limits to Testing
 
