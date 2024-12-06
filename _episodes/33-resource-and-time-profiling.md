@@ -71,7 +71,7 @@ Let's try to profile execution time for some functions of our `lcanalyzer` modul
 
 > ## Execution time with Magics
 > Create a new branch called `profiling`
-> and execute the Magic commands above to measure execution time for functions `max_mag` and `plotUnfolded`.
+> and execute the Magic commands above to measure execution time for functions `max_mag` and `plot_unfolded`.
 >
 > > ## Solution
 > >
