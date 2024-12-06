@@ -11,11 +11,12 @@ objectives:
 keypoints:
 - "Using testing requires us to change our practice of code development, but saves time in the long run by
 allowing us to more comprehensively and rapidly find faults in code, as well as giving us greater confidence in the correctness of our code."
-- "The use of test techniques and infrastructures such as **parameterisation** and **Continuous Integration** can help scale and further automate our testing process."
+- "Writing **parametrized** tests makes sure that you are testing your software in different scenarios."
+- "Writing tests **before** the features forces you to think of the requirements and best possible implementations in advance."
 ---
 
 We've just set up a suitable environment for the development of our software project
-and are ready to start coding.
+and are ready to start developing new features.
 However, we want to make sure that the new code we contribute to the project
 is actually correct and is not breaking any of the existing code.
 So, in this section,
@@ -41,11 +42,7 @@ In this section we will:
   to verify the correct behaviour of code and identify faults,
   making use of test **parameterisation**
   to increase the number of different test cases we can run.
-- Automatically run a set of unit tests using **GitHub Actions** -
-  a **Continuous Integration** infrastructure that allows us to
-  automate tasks when things happen to our code,
-  such as running those tests when a new commit is made to a code repository.
-- Use Jupyter Lab's integrated **debugger** to
-  help us locate a fault in our code while it is running, and then fix it.
+- Try out **Test-Driven Development**, an work approach based on developing the checks
+  before writing the code itself.
 
 {% include links.md %}
