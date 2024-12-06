@@ -1,5 +1,5 @@
 ---
-title: "Testing for writing robust software"
+title: "Robust Software with Testing Approaches"
 teaching: 30
 exercises: 20
 questions:
