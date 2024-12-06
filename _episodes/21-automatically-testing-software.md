@@ -107,7 +107,7 @@ how we can test our software for light curve analysis.
 
 ## Lightcurve Data Analysis
 
-Let's go back to our [lightcurve analysis software project](/python-intermediate-development/11-software-project/index.html#light-curve-analysis-project).
+Let's go back to our [lightcurve analysis software project](/interpython_1day_testing/11-software-project/index.html#light-curve-analysis-project).
 Recall that it contains a `data` directory, where we have observations of presumably variable stars, namely RR Lyrae candidates, coming
 from two sources: the Kepler Space Telescope and LSST Data Preview 0. 
 
