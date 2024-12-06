@@ -1,5 +1,5 @@
 ---
-title: "Edge-Cases, Test Driven Development and Defensive Programming"
+title: "Testing for writing robust software"
 teaching: 30
 exercises: 20
 questions:
