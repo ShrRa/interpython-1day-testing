@@ -99,7 +99,7 @@ Let's try to profile execution time for some functions of our `lcanalyzer` modul
 > > ~~~
 > > {: .output}
 > >
-> > And we see that this command takes only a few milliseconds to run.
+> > And we see that this command takes only a few microseconds to run.
 > > Pay attention that in order for this command to work, it should be in the same line as the
 > > code you are profiling. Otherwise, you need to use a *cell* Magic preceded by double `%`.
 > >
@@ -182,13 +182,13 @@ However, this method cannot be used conveniently for e.g. measuring execution ti
 
 ## **References on Time Profiling**
 
-### **1. Official Documentation**
+**1. Official Documentation**
 - [Python timeit Module](https://docs.python.org/3/library/timeit.html)  
   Detailed explanation of how to use the `timeit` module for benchmarking Python code.
 - [Python time Module](https://docs.python.org/3/library/time.html)  
   Overview of the `time` module, including functions like `time()`, `sleep()`, and more.
 
-### **2. Jupyter Notebook Magics**
+**2. Jupyter Notebook Magics**
 - [IPython Magic Commands Documentation](https://ipython.readthedocs.io/en/stable/interactive/magics.html)  
   Comprehensive list of magic commands available in Jupyter and IPython, including `%time`, `%timeit`, and others.
 - **GeeksforGeeks: Time Profiling in Python**  
@@ -207,18 +207,21 @@ A simple example is to list the files in the current working directory:
 ~~~
 %ls
 ~~~
+{: .language-python}
 
 On most operating systems you can execute the following function to analyze the runtime:
 
 ~~~
 $ time python myscript.py
 ~~~
+{: .language-python}
 
 If we are using a juypyter notebook with an IPython kernel, the following the `%time` magic can be used which is used for timing code blocks. 
 
 ~~~
 %time [x**2 for x in range(7777777)]
 ~~~
+{: .language-python}
 
 It reports the so-called wall clock time, i.e. the elapsed actual time, but also the user CPU time. The single `%` symbol means that `%time` is applied to single cell. To apply magic commands to an entire cell, we use `%%`:
 
@@ -227,32 +230,37 @@ It reports the so-called wall clock time, i.e. the elapsed actual time, but also
 squares = [x**2 for x in range(7777777)]
 quadrupels = [x**4 for x in range(7777777)]
 ~~~
+{: .language-python}
 
-Depending on the structure of the datas ets in question or if stochastic processes are involved, the runtime of a code block may vary. As a side-remark, if you develop code running on a spacecraft, you want to avoid unpredictable runtime at all cost. To get a better measurement, `%%timeit` comes with extra options to test a block multiple times, which also allows us to get a mean and standard deviation:
+Depending on the structure of the datasets in question or if stochastic processes are involved, the runtime of a code block may vary. As a side-remark, if you develop code running on a spacecraft, you want to avoid unpredictable runtime at all cost. To get a better measurement, `%%timeit` comes with extra options to test a block multiple times, which also allows us to get a mean and standard deviation:
 
 ~~~
 %%timeit
 squares = [x**2 for x in range(7)]
 quadrupels = [x**4 for x in range(7)]
 ~~~
+{: .language-python}
 
 The output of this reveals that after 7 runs with 100,000 the following measurement is available:
 
 ~~~
 4.51 μs ± 16 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
 ~~~
+{: .language-python}
 
 The pedestrian approach of using `%timeit` works for blocks of code but testing multiple functions, the number of calls and time it takes can be helpful. The goal is usually to identify the slowest function, but the difference between wall time and user CPU time can reveal that file operations with local or remote drives may be a limiting factor. On machines with limited RAM, we could also consider profiling memory usage. For this we can install more magic commands, e.g. from [Python Package Index](https://pypi.org/)
 
 ~~~
 $ python -m pip install ipython-memory-magics
 ~~~
+{: .language-python}
 
 and load the external memory magic via
 
 ~~~
 %load_ext memory_magics
 ~~~
+{: .language-python}
 
 Now we can analyze the memory usage in our cell
 
@@ -261,12 +269,14 @@ Now we can analyze the memory usage in our cell
 squares = [x**2 for x in range(7777)]
 quadruples = [x**4 for x in range(7777)]
 ~~~
+{: .language-python}
 
 The output of this should look as follows:
 
 ~~~
 RAM usage: cell: 590.7 KiB / 590.94 KiB
 ~~~
+{: .language-python}
 
 
 ## Resource profiling with offline profilers
@@ -284,6 +294,7 @@ As a rule of thumb, software developers tend to profile work on improving 10 to 
 ~~~
 $ python -m pip install snakeviz
 ~~~
+{: .language-bash}
 
 
 You can generate performance statistics for a script `myscript.py` using `cProfile` with the following command:
@@ -291,12 +302,14 @@ You can generate performance statistics for a script `myscript.py` using `cProfi
 ~~~
 $ python -m cProfile -o output.stats myscript.py
 ~~~
+{: .language-bash}
 
 An interactive view of these statistics can be obtained by running:
 
 ~~~
 $ snakeviz output.stats
 ~~~
+{: .language-bash}
 
 This will open in your browser, showing an interactive table that is particularly useful for inspecting the number of function calls and elapsed time per function call (among other metrics). We are using our `squares` and `quadruples` functions to illustrate how the output looks like. The table can be sorted by any column. Performance statistics show not only your functions, but also functions from the standard library, e.g. list comprehensions are shown separately. 
 
@@ -316,6 +329,7 @@ The sunburst diagram looks as follows:
 ~~~
 %load_ext snakeviz
 ~~~
+{: .language-python}
 
 and test it using our example
 
@@ -325,6 +339,7 @@ def squares(n):
 
 %snakeviz squares(777)
 ~~~
+{: .language-python}
 
 Based on the output, we would mention a tool providing call graphs in passing: [gprof2dot](https://pypi.org/project/gprof2dot/) can be used to plot call graphs in the following way, which some users could find more intuitive than the default `snakeviz` plots:
 
@@ -340,6 +355,7 @@ profiler.run('squares(777777); squares(777777)')
 profiler.disable()
 profiler.print_stats(sort='cumulative')
 ~~~
+{: .language-python}
 
 this should return a list as follows which can also be written to disk using `profiler.dump_stats(filename)`:
 
@@ -355,6 +371,7 @@ this should return a list as follows which can also be written to disk using `pr
         2    0.511    0.256    0.511    0.256 890459632.py:6(<listcomp>)
         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
 ~~~
+{: .output}
 
 > ## Optional Exercise: Profile lightcurve
 >
