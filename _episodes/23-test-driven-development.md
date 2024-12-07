@@ -357,9 +357,9 @@ then 'Refactor' (tidy up) the result.
 > >        np.nanstd([np.nan, 0, 1])),
 > >   ])
 > > def test_std_mag(test_df, test_colname, expected):
-> >    """Test max function works for array of zeroes and positive integers"""
+> >    """Test standard dev function works like numpy.nanstd for array of zeroes, positive integers, and NaNs"""
 > >    from lcanalyzer.models import std_mag
-> >    assert np.isnan(std_mag(test_df, test_colname)) == np.isnan(expected)
+> >    assert std_mag(test_df, test_colname) == expected
 > > ~~~
 > > {: .language-python}
 > >
@@ -375,8 +375,7 @@ then 'Refactor' (tidy up) the result.
 > > def std_mag(data,mag_col):
 > >    """Calculate the standard devation of a lightcurve.
 > >    :param data: pd.DataFrame with observed magnitudes for a single source.
-> >    :param mag_col: a string with the name of the column for calculating the 
-> > standard devation.
+> >    :param mag_col: a string with the name of the column for calculating the standard devation.
 > >    :returns: The standard devation of the column.
 > >    """
 > >    return data[mag_col].std(ddof=0)
