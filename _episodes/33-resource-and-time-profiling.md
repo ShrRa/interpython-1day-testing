@@ -196,12 +196,4 @@ However, this method cannot be used conveniently for e.g. measuring execution ti
   A beginner-friendly introduction to time profiling methods in Python.
 
 
-## Resource profiling
-
-- What is profiling
-- What kinds of resources can we measure
-- What are the complications
-- Main tools
-- Using SnakeViz
-
 {% include links.md %}
