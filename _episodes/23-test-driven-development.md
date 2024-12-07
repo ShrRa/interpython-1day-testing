@@ -322,7 +322,67 @@ then 'Refactor' (tidy up) the result.
 
 > ## Trying the TDD approach
 >
-> TDD exercise
+> Add a new function to `models.py` called `std_mag` that calculates the standard
+> deviation of 
+> an input lightcurve. Instead of starting by writing the function, employ 
+> the **Red, Green, Refactor** approach and start by writing the tests. 
+> Consider corner and edge cases and use what we've learned about scaling up
+> unit tests using the `parameterize` decorator.
+> > ## Solution
+> > Let's start by copying our parameterized tests for `mean_mag` but add a 
+> > new edge case for an input array that includes NaNs.
+> > 
+> > ~~~
+> > import numpy as np
+> > @pytest.mark.parametrize(
+> >     "test_df, test_colname, expected",
+> >    [
+> >        (pd.DataFrame(data=[[1, 5, 3], 
+> >                            [7, 8, 9], 
+> >                            [3, 4, 1]], 
+> >                      columns=list("abc")),
+> >        "a",
+> >       np.nanstd([1, 7, 3])),
+> >       (pd.DataFrame(data=[[0, 0, 0], 
+> >                           [0, 0, 0], 
+> >                           [0, 0, 0]], 
+> >                     columns=list("abc")),
+> >       "b",
+> >       np.nanstd([0, 0, 0])),
+> >       (pd.DataFrame(data=[[np.nan, 1, 0], 
+> >                           [0, np.nan, 1], 
+> >                           [1, 1, np.nan]], 
+> >                     columns=list("abc")),
+> >        "a",
+> >        np.nanstd([np.nan, 0, 1])),
+> >   ])
+> > def test_std_mag(test_df, test_colname, expected):
+> >    """Test max function works for array of zeroes and positive integers"""
+> >    from lcanalyzer.models import std_mag
+> >    assert np.isnan(std_mag(test_df, test_colname)) == np.isnan(expected)
+> > ~~~
+> > {: .language-python}
+> >
+> > Suppose the intended behavior of `std_mag` should be to return the same result as 
+> > using `numpy.nanstd()` on the input column. In this case, our test will fail if we
+> > use the `.std()` method of
+> > the input dataframe. This is because the divisor used in `numpy.nanstd()` is 
+> > `N - ddof` where N is the number of elements and "ddof" (delta degrees of freedom)
+> > is zero by default, but is set to 1 by default when using `pd.DataFrame().std()`. 
+> > Adding `ddof=0` as an argument to the `.std()` call in our function fixes the 
+> > error.
+> > ~~~
+> > def std_mag(data,mag_col):
+> >    """Calculate the standard devation of a lightcurve.
+> >    :param data: pd.DataFrame with observed magnitudes for a single source.
+> >    :param mag_col: a string with the name of the column for calculating the 
+> > standard devation.
+> >    :returns: The standard devation of the column.
+> >    """
+> >    return data[mag_col].std(ddof=0)
+> > ~~~
+> > {: .language-python}
+> {: .solution}
 >
 {: .challenge}
 
