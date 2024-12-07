@@ -23,3 +23,5 @@ venv/
 .*history
 .tool-versions
 .vscode/
+Untitled.ipynb
+.gitignore
