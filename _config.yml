@@ -10,7 +10,7 @@
 carpentry: "incubator"
 
 # Overall title for pages.
-title: "Intermediate Python for Astronomical Software Development"
+title: "Single-Day Intermediate Python for Astronomical Software Development: Testing"
 
 # Life cycle stage of the lesson
 # possible values: "pre-alpha", "alpha", "beta", "stable"

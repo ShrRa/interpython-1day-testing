@@ -1,180 +1,19 @@
 ---
-title: "Issue Diagnostics with a Debugger and Other Tools"
+title: "Robust Software with Testing Approaches"
 teaching: 30
 exercises: 20
 questions:
-- "Once we know our program has errors, how can we locate them in the code?"
 - "How can we make our programs more resilient to failure?"
+- "Can we use testing to speed up our work?"
 objectives:
-- "Use a debugger to explore behaviour of a running program"
 - "Describe and identify edge and corner test cases and explain why they are important"
-- "Apply error handling and defensive programming techniques to improve robustness of a program"
-- "Integrate linting tool style checking into a continuous integration job"
+- "Apply defensive programming techniques to improve robustness of a program"
+- "Learn what Test Driven Development is"
 keypoints:
-- "Unit testing can show us what does not work, but does not help us locate problems in code."
-- "Use a **debugger** to help you locate problems in code."
-- "A **debugger** allows us to pause code execution and examine its state by adding **breakpoints** to lines in code."
-- "Use **preconditions** to ensure correct behaviour of code."
 - "Ensure that unit tests check for **edge** and **corner cases** too."
-- "Using linting tools to automatically flag suspicious programming language constructs and stylistic errors
-can help improve code robustness."
+-  "Use **preconditions** to ensure correct behaviour of code."
+- "Write tests before the code itself to think of the functionality and desired behaviour in advance."
 ---
-
-## Introduction
-
-Unit testing can tell us something is wrong in our code
-and give a rough idea of where the error is
-by which test(s) are failing.
-But it does not tell us exactly where the problem is (i.e. what line of code),
-or how it came about.
-The process of finding out what causes errors in our code is called **debugging**.
-There are numerous toold and methods for doing this, and in all likelyhood,
-you are already using some of them. Perhaps the most common way of debugging your 
-Python code, especially when the project is relatively simple, is to use `print`
-statements for inspecting intermediate values of the variables. Jupyter Lab with its
-cell-by-cell workflow especially encourages this kind of debugging. Another approach
-is to split a larger piece of code into smaller chunks and check them piece by piece.
-However, there is more advanced tool for this, called **debugger**.
-
-## Setting the Scene
-
-Let us add a new function to our jupyter notebook called `calc_stats()` 
-that will calculate for us all three statistical indicators (min, max and mean) for all
-bands of our light curve.
-(Make sure you create a new feature branch for this work off your `develop` branch.)
-
-~~~
-def calc_stats(lc, bands, mag_col):
-    # Calculate max, mean and min values for all bands of a light curve
-    stats = {}
-    for b in bands:
-        stat = {}
-        stat["max"] = models.max_mag(lc[b], mag_col)
-        stat["mean"] = models.max_mag(lc[b], mag_col)
-        stat["min"] = models.mean_mag(lc[b], mag_col)
-        stats[b] = stat
-    return pd.DataFrame.from_records(stats)
-~~~
-{: .language-python}
-
-**Note:** *there are intentional mistakes in the above code,
-which will be detected by further testing and code style checking below
-so bear with us for the moment!*
-
-This code accepts a dictionary of DataFrames that contain observations of a single object in all bands.
-Then this code iterates through the bands, calculating the requested statistical values and storing them
-in a dictionary. At the end, these dictionaries are converted into a DataFrame, where column names are the
-keys of the original `lc` dictionary, and the index ('row names') are the names of the statistics ('max',
-'mean' and 'min'). Pass one of our previously designed light curves to this function
-to see that the result is an accurate and informative pandas table.
-
-> ## Can't we save them directly into a DataFrame?
-> Technically, we can. However, editing DataFrames row by row or element by element
-> is inefficient from the computational point of view. For this reason, when creating a frame
-> row by row is inevitable, storing data
-> in a list, dictionary or array and then converting them in a DataFrame is the preferred
-> solution. It is also worth noting that in many cases iterations in a loop
-> through the rows of some kind of a table can be avoided entirely with a better
-> design of the algorithm.
-{: .callout}
-
-Now let's design a test case for this function:
-
-~~~
-test_cols = list("abc")
-test_dict = {}
-test_dict["df0"] = pd.DataFrame(
-    data=[[8, 8, 0], 
-          [0, 1, 1], 
-          [2, 3, 1], 
-          [7, 9, 7]], columns=test_cols
-)
-test_dict["df1"] = pd.DataFrame(
-    data=[[3, 8, 2], 
-          [3, 8, 0], 
-          [3, 9, 8], 
-          [8, 2, 5]], columns=test_cols
-)
-test_dict["df2"] = pd.DataFrame(
-    data=[[8, 4, 3], 
-          [7, 6, 3], 
-          [4, 2, 9], 
-          [6, 4, 0]], columns=test_cols
-)
-~~~
-{: .language-python}
-
-Remember, that we don't have to fill the data manually, but can use built-in `numpy`
-random generator. For example, for the data above `size = (4,3); np.random.randint(0, 10, size)` 
-was used.
-
-The expected output for these data will look like this:
-
-~~~
-test_output = pd.DataFrame(data=[[9,9,6],[5.25,6.75,4.],[1,2,2]],columns=['df0','df1','df2'],index=['max','mean','min'])
-~~~
-{: .language-python}
-
-Finally, we can use `assert` statement to check if our function produces what we expect...
-~~~
-assert calc_stats(test_dict, test_dict.keys(), 'b') == test_output
-~~~
-{: .language-python}
-
-...and get a `ValueError`:
-~~~
-...
-ValueError: The truth value of a DataFrame is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
-~~~
-{: .output}
-
-The reason for this is that `assert` takes a condition that produces a _single_ boolean value,
-but using `==` for two DataFrames results in an element-wise comparison and produces a _DataFrame_
-filled with booleans. 
-
-This is the case when we need to use a more powerful `assert` function, the one that is developed specifically 
-for a certain variable type. `Pandas` has its own module called `testing` that contains a number of type-specific
-`assert` functions. Let's import this module:
-
-~~~
-import pandas.testing as pdt
-~~~
-{: .language-python}
-
-And use `assert_frame_equal` function that can compare DataFrames in a meaningful way:
-~~~
-pdt.assert_frame_equal(calc_stats(test_dict, test_dict.keys(), 'b'),
-                              test_output,
-                             check_exact=False,
-                             atol=0.01)
-~~~
-{: .language-python}
-
-The first two arguments of this function are just what we would expect: the call of our `calc_stats`
-function and the expected `test_output`. `assert_frame_equal` will be comparing these two DataFrames.
-The next two arguments allow this function to compare the DataFrames with only some degree of precision.
-This precision is determined by the argument `atol`, which stands for 'absolute tolerance'. The DataFrames
-will be considered equal if their elements differ no more than by `atol` value. This is similar to the 
-`pytest.approx` that we encountered in the previous episodes. 
-
-This assertion is falining with an error message that does not give many clues as to what went wrong.
-
-~~~
-...
-AssertionError: DataFrame.iloc[:, 0] (column name="df0") are different
-
-DataFrame.iloc[:, 0] (column name="df0") values are different (66.66667 %)
-[index]: [max, mean, min]
-[left]:  [9.0, 9.0, 5.25]
-[right]: [9.0, 5.25, 1.0]
-At positional index 1, first diff: 9.0 != 5.25
-~~~
-{: .output}
-
-Apparently, there are differences between the two DataFrames in the column 'df0';
-the values in the 'max' row are the same, but the 'mean' and 'min' values are different.
-Instead of adding `print` statements in our function and executing it again and again, let's
-use a debugger at this point to see what is going on and why the function failed.
 
 ## Corner or Edge Cases
 
@@ -454,5 +293,65 @@ and instead state the assumptions and limitations of your code
 for users of your code in the docstring
 and rely on them to invoke your code correctly.
 This approach is useful when explicitly checking the precondition is too costly.
+
+## Test Driven Development
+
+In the previous episodes
+we learnt how to create *unit tests* to make sure our code is behaving as we intended.
+**Test Driven Development** (TDD) is an extension of this.
+If we can define a set of tests for everything our code needs to do,
+then why not treat those tests as the specification.
+
+With Test Driven Development,
+the idea is to write our tests first and only write enough code to make the tests pass.
+It is done at the level of individual features -
+define the feature,
+write the tests,
+write the code.
+The main advantages are:
+
+- It forces us to think about how our code will be used before we write it
+- It prevents us from doing work that we don't need to do, e.g. "I might need this later..."
+- It forces us to test that the tests _fail_ before we've implemented the code, meaning we
+   don't inadvertently forget to add the correct asserts.
+
+You may also see this process called **Red, Green, Refactor**:
+'Red' for the failing tests,
+'Green' for the code that makes them pass,
+then 'Refactor' (tidy up) the result.
+
+> ## Trying the TDD approach
+>
+> TDD exercise
+>
+{: .challenge}
+
+## Limits to Testing
+
+Like any other piece of experimental apparatus,
+a complex program requires a much higher investment in testing than a simple one.
+Putting it another way,
+a small script that is only going to be used once,
+to produce one figure,
+probably doesn't need separate testing:
+its output is either correct or not.
+A linear algebra library that will be used by
+thousands of people in twice that number of applications over the course of a decade,
+on the other hand, definitely does.
+The key is identify and prioritise against
+what will most affect the code's ability to generate accurate results.
+
+It's also important to remember that unit testing cannot catch every bug in an application,
+no matter how many tests you write.
+To mitigate this manual testing is also important.
+Also remember to test using as much input data as you can,
+since very often code is developed and tested against the same small sets of data.
+Increasing the amount of data you test against - from numerous sources -
+gives you greater confidence that the results are correct.
+
+Our software will inevitably increase in complexity as it develops.
+Using automated testing where appropriate can save us considerable time,
+especially in the long term,
+and allows others to verify against correct behaviour.
 
 {% include links.md %}

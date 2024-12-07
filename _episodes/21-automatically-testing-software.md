@@ -105,38 +105,36 @@ we'll merge our `test-suite` branch back into `develop`.
 Don't forget to activate our `venv` environment, launch Jupyter Notebook and let's see 
 how we can test our software for light curve analysis. 
 
+## Using Jupyter Lab
+
+Let's open our project in Jupyter Lab.
+
+### Jupyter Lab interface
+To launch Jupyter Lab, activate the `venv` environment created in the previous episode and type in the terminal:
+ ~~~
+ (venv) $ jupyter lab
+ ~~~
+ {: .language-bash}
+The output will look similar to this:
+ ~~~
+ To access the server, open this file in a browser:
+        file:///home/alex/.local/share/jupyter/runtime/jpserver-2946113-open.html
+    Or copy and paste one of these URLs:
+        http://localhost:8888/lab?token=e2aff7125e9917868a16b8b627f73995eb83effbcafeee05
+        http://127.0.0.1:8888/lab?token=e2aff7125e9917868a16b8b627f73995eb83effbcafeee05
+ ~~~
+ {: .output}
+Now you can click on one of the URLs below and Jupyter Lab will open in your browser.
+
 ## Lightcurve Data Analysis
 
-Let's go back to our [lightcurve analysis software project](/python-intermediate-development/11-software-project/index.html#light-curve-analysis-project).
+Let's go back to our [lightcurve analysis software project](/interpython_1day_testing/11-project-intro/index.html#light-curve-analysis-project).
 Recall that it contains a `data` directory, where we have observations of presumably variable stars, namely RR Lyrae candidates, coming
 from two sources: the Kepler Space Telescope and LSST Data Preview 0. 
 
-> ## Don't forget about the best practices
->
-> Following the best practices from [the corresponding section](/python-intermediate-development/14-jup-best-practices/index.html),
-> let's start with creating a new notebook and drafting its structure.
-> Using headers in the markdown cells, determine the sections of your notebook.
-> 
-> > ## Solution
-> > We can start with the following sections:
-> > 1. Imports
-> > 2. Params
-> > 3. Data loading
-> > 4. Data inspection
-> > 5. Selecting light curves for a single object
-> > 6. Trying the model.py functions
-> > 7. Test development
-> > 
-> > If we need something else, we can always add it later.
-> > 
-> {: .solution}
-> 
-{: .challenge}
-
-Now let's open our data and have a look at it. For this we will use `pandas` package.
+Let's open our data and have a look at it. For this we will use `pandas` package.
 Import it, open the `lsst_RRLyr.pkl` catalogue and have a look at the format of this table.
 Don't forget to put your code in the sections where it belongs!
-
 ~~~
 import pandas as pd
 ~~~
@@ -201,20 +199,6 @@ for b in bands:
 ~~~
 {: .language-python}
 
-> ## Don't forget about the best practices
->
-> Do you see any variables defined in the code above that
-> you should move in some other section?
-> > ## Solution
-> >
-> > It seems very likely that we will need the variable `bands`
-> > many times in the future. Let's move it to the 'Parameters'
-> > section of the notebook.
-> > 
-> {: .solution}
-> 
-{: .challenge}
-
 Have a look at the resulting dictionary: you will find that each element
 has a key corresponding to the band name, and it's value will contain a Pandas DataFrame with
 observations in this band.
@@ -240,24 +224,18 @@ models.max_mag(lc['g'],'psfMag')
 ~~~
 {: .output}
 
-> ## Don't forget about the best practices
-> Do you see anything in the code we just typed that can be put in the 'Parameters'?
-> 
-> > ## Solution
-> > 
-> > It is better to put
-> > the magnitude column name, 'psfMag', in a variable (let's call it `colname_mag`) and
-> > declare it in the 'Parameters' section. Why? Because chances are, in the future
-> > we will want to apply our code to another dataset with different column names,
-> > and if we continue using 'psfMag' across the notebook, later on we'll have to replace it
-> > either manually, or using 'Search' functionality. In a large notebook both actions are likely
-> > to produce errors.
-> > 
-> {: .solution}
->
-{: .challenge}
-
 How would you check if our `max_mag` function works correctly?
+
+
+> ## Don't forget about the best practices
+> There are some best practices recommended when working with Jupyter Notebooks,
+> and one of those is to draft the structure of your notebook in advance.
+> When you work on something new, e.g. testing, put it into a separate section.
+> It usually a good idea to plan the structure of your notebook in advance,
+> and even use separate notebooks for different stages of your work. For now,
+> put the experiments with testing into a separate section of the notebook.
+>
+{: .callout}
 
 The answer that just came to your head, in all likelyhood, sounds similar
 to this: "I would pass a simple DataFrame to this function and check manually
@@ -368,7 +346,7 @@ $ python -m pip install pytest
 > option, however [pytest has many distinct advantages](https://realpython.com/pytest-python-testing/#what-makes-pytest-so-useful), 
 > particularly for learning, including:
 >
-> - unittest requires additional knowledge of object-oriented frameworks (covered later in the course) 
+> - unittest requires additional knowledge of object-oriented paradigm
 > to write unit tests, whereas in pytest these are written in simpler functions so is easier to learn
 > - Being written using simpler functions, pytest's scripts are more concise and contain less boilerplate, and thus are
 > easier to read
@@ -376,8 +354,9 @@ $ python -m pip install pytest
 > - pytest has a vast ecosystem of plugins available if ever you need additional testing functionality
 > - unittest-style unit tests can be run from pytest out of the box!
 >
-> A common challenge, particularly at the intermediate level, is the selection of a suitable tool from many alternatives
-> for a given task. Once you've become accustomed to object-oriented programming you may find unittest a better fit
+> You can have a look at the tests written with pytest and unittest in the
+> [pandas](https://github.com/pandas-dev/pandas/tree/main/pandas/tests) and LSST [rubin_sim](https://github.com/lsst/rubin_sim/tree/main/tests)
+> repositories correspondingly. Once you've become accustomed to object-oriented programming you may find unittest a better fit
 > for a particular project or team, so you may want to revisit it at a later date!
 >
 {: .callout}

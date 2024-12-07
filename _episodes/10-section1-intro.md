@@ -1,11 +1,11 @@
 ---
-title: "Section 1: Setting Up Environment For Collaborative Code Development"
+title: "Section 1: Obtaining the Software Project and Preparing Virtual Environment"
 colour: "#fafac8"
 start: true
-teaching: 10
+teaching: 5
 exercises: 0
 questions:
-- "What tools are needed to collaborate on code development effectively?"
+- "What tools are needed for collaborative software development?"
 objectives:
 - "Provide an overview of all the different tools that will be used in this course."
 keypoints:
@@ -13,6 +13,8 @@ keypoints:
 you need to use a number of different tools."
 - "When there is a choice of tools for a task you will have
 to decide which tool is right for you, which may be a matter of personal preference or what the team or community you belong to is using."
+- "A popular tool for organizing collaborative software development is Git, that allows you to share your code with other people
+and keep track of its changes."
 ---
 
 The first section of the course is dedicated to setting up your environment for collaborative software development
@@ -29,8 +31,6 @@ we select one to use but mention alternatives too.
 As you get more comfortable with different tools and their alternatives,
 you will select the one that is right for you based on your personal preferences
 or based on what your collaborators are using.
-
-![Tools needed to collaborate on code development effectively](../fig/section1-overview.png){: .image-with-shadow width="800px" }
 
 Here is an overview of the tools we will be using.
 

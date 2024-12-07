@@ -198,7 +198,11 @@ However, this method cannot be used conveniently for e.g. measuring execution ti
 
 ## IPython Magics for casual profiling
 
-Before discussing the most important tools for profiling, we are briefly introducing a more pedestrian approach to assess the runtime of a single code block. For this purpose we are going to use IPython Magics, which are part of the respective IPython kernel or specified by users. Either way, the command needs to be prefixed with at least one `%` symbol and can run various operations. A simple example is to list the files in the current working directory:
+Before discussing the most important tools for profiling, we are briefly introducing a more 
+pedestrian approach to assess the runtime of a single code block. For this purpose we are going 
+to use IPython Magics, which are part of the respective IPython kernel or specified by users. 
+Either way, the command needs to be prefixed with at least one `%` symbol and can run various operations. 
+A simple example is to list the files in the current working directory:
 
 ~~~
 %ls
@@ -369,6 +373,5 @@ Profiling a running project can be an invaluable tool for identifying and addres
 
 1. [py-spy](https://github.com/benfred/py-spy)
 2. [pyinstrument](https://github.com/joerick/pyinstrument)
-
 
 {% include links.md %}

@@ -5,7 +5,7 @@ Note that the lesson material can change at any point - if you are planning a wo
 either let the maintainers know or make sure you use your own fork of the lesson.
 ```
 
-# Intermediate Python for Astronomical Software Development
+# Single-Day Intermediate Python for Astronomical Software Development: Testing
 
 An intermediate-level course in research software engineering and development skills and working as part of a 
 team (using Python as an example language). This lesson teaches intermediate-level software development 
@@ -26,16 +26,8 @@ The lesson is currently in development.
 ## Teaching the Lesson
 
 The lesson is suitable for both instructor-led teaching or guided self-learning where instructors provide help 
-and answer questions (synchronously or asynchrounously) as learners go through the course on their own. 
-Initially, in sections 1-3 of the lesson, 
-learners are working on a software project and going through exercises individually.
-In sections 4 and 5, they are grouped and work in teams,
-as they would when collaborating on a team software project development.
-
-The lesson has 5 sections; 
-each section can be delivered or worked through in self-learning mode over a half a day to a day, 
-depending on the pace.
-We would recommend setting aside one day per section to make sure the delivery is not rushed. 
+and answer questions (synchronously or asynchrounously) as learners go through the course on their own. The lesson
+contains three sections, including the introductory one, and can be covered in ~4 hours.
 
 ## Contributing
 

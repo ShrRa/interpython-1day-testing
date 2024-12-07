@@ -12,6 +12,23 @@ keypoints:
 - "Use linting tools in the IDE or on the command line (or via continuous integration) to automatically check your code style."
 ---
 
+## Introduction
+
+One of the most important things we can do to make sure our code is readable 
+by others (and ourselves a few months down the line) is to make sure that it is descriptive, 
+cleanly and consistently formatted and uses sensible, descriptive names for variable, 
+function and module names. In order to help us format our code, we generally follow guidelines 
+known as a style guide. A style guide is a set of conventions that we agree upon with our colleagues 
+or community, to ensure that everyone contributing to the same project is producing code which looks 
+similar in style. While a group of developers may choose to write and agree upon a new style guide 
+unique to each project, in practice many programming languages have a single style guide which is 
+adopted almost universally by the communities around the world. In Python, although we do have 
+a choice of style guides available, the **PEP 8** style guide is most commonly used. PEP here stands 
+for Python Enhancement Proposals; PEPs are design documents for the Python community, typically 
+specifications or conventions for how to do something in Python, a description of a new feature in Python, etc.
+A full list of style guidelines for this style is available from the [PEP 8 website](https://peps.python.org/pep-0008/).
+These guidelines cover naming of different types of objects, rules for indentation, recommended line lengths and so on.
+
 ## Verifying Code Style Using Linters
 
 Knowing the rules of code formatting helps us avoid mistakes 
@@ -26,7 +43,7 @@ For Jupyter Lab, a number of linters (as well as other tools for improving the q
 your code) are available as part of a package called [`nbQA`](https://github.com/nbQA-dev/nbQA).
 Let's look at a very well-used one of these called `pylint`.
 
-First, let's ensure we are on the `style-fixes` branch once again.
+First, let's create a new branch and call it `style-fixes`.
 
 ~~~
 $ git checkout style-fixes
@@ -93,6 +110,9 @@ First, let's look at our notebook:
 $ nbqa pylint light-curve-analysis.ipynb --disable=C0114
 ~~~
 {: .language-bash}
+
+The `--disable=C0114` parameter tells pylint to not notify us about
+missing docstrings for the modules. 
 
 The output will look somewhat similar to this:
 ~~~
@@ -243,49 +263,11 @@ style all over your code and make it much more readable.
 > After that you need to refresh your Jupyter Lab page. In notebook tabs, a new button will appear
 > at the end of the top panel. By clicking this button, you will execute the `black` formatter over the
 > notebook.
+>
+> Don't forget to commit your changes!
 {: .callout}
 
-> ## Optional Exercise: Improve Code Style of Your Other Python Projects
-> If you have a Python project you are working on or you worked on in the past,
-> run it past Pylint to see what issues with your code are detected, if any.
-{: .challenge}
-
-It is possible to automate these kind of code checks
-with GitHub's Continuous Integration service GitHub Actions -
-we will come back to automated linting in the episode on
-["Diagnosing Issues and Improving Robustness"](../24-diagnosing-issues-improving-robustness/index.html).
-
-## Improving Robustness with Automated Code Style Checks
-
-Let's re-run Pylint over our project after having added some more code to it.
-From the project root do:
-
-~~~
-pylint lcanalyzer
-~~~
-{: .language-bash}
-
-You may see something like the following in Pylint's output:
-
-~~~
-************* Module lcanalyzer.models
-lcanalyzer/models.py:45:0: C0116: Missing function or method docstring (missing-function-docstring)
-lcanalyzer/models.py:49:4: W0622: Redefining built-in 'min' (redefined-builtin)
-lcanalyzer/models.py:50:4: W0622: Redefining built-in 'max' (redefined-builtin)
-~~~
-{: .language-bash}
-
-The above output indicates that by using the local variables called `min` and `max` in the `normalize_lc` function, 
-we have redefined a built-in Python functions called `min` and `max`. This isn’t a good idea and may have some 
-undesired effects (e.g. if you redefine a built-in name in a global scope you may cause yourself 
-some trouble which may be difficult to trace).
-
-> ## Exercise: Fix Code Style Errors
->Rename our local variable `min` and `max` to something else (e.g. call it `min_data` and `max_data`),
-> and use `black lcanalyzer/models.py` to automatically reformat your code in agreement with `PEP8`.
-> Then rerun your tests, commit these latest changes and push them to GitHub using our usual feature branch workflow.
-> 
-{: .challenge}
+## Adding pylint to the CI build
 
 It may be hard to remember to run linter tools every now and then.
 Luckily, we can now add this Pylint execution to our continuous integration builds
