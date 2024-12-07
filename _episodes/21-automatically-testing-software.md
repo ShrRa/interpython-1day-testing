@@ -128,7 +128,7 @@ Now you can click on one of the URLs below and Jupyter Lab will open in your bro
 
 ## Lightcurve Data Analysis
 
-Let's go back to our [lightcurve analysis software project](/interpython-1day-testing/11-project-intro/index.html#light-curve-analysis-project).
+Let's go back to our [lightcurve analysis software project](/11-project-intro/index.html#light-curve-analysis-project).
 Recall that it contains a `data` directory, where we have observations of presumably variable stars, namely RR Lyrae candidates, coming
 from two sources: the Kepler Space Telescope and LSST Data Preview 0. 
 
