@@ -77,6 +77,8 @@ There are plenty Magics cheatsheets online, however, the easiest way to look up 
 ![`%lsmagic` prints a list of all Magics](../fig/imgDummy.png){: .image-with-shadow width="600px"}
 ![`%quickref` prints a reference card on Magic commands](../fig/imgDummy.png){: .image-with-shadow width="600px"}
 
+## Time Profiling with Magics
+
 For time profiling, the most useful Magics are:
 
 - **`%time`**: Measures execution time of a single line.
@@ -84,30 +86,163 @@ For time profiling, the most useful Magics are:
 - **`%timeit`**: Repeats timing of a line for reliable results.
 - **`%%timeit`**: Repeats timing of a cell for average results.
 
+Let's use this function to profile some code. As an example we'll use a code that calculates the first
+thousand of partial sums of [series](https://en.wikipedia.org/wiki/Series_(mathematics)#Partial_sum_of_a_series) of natural numbers
+and saves it into a list.
 
+First, we need to create a new branch:
+~~~
+$ git checkout develop
+$ git checkout -b profiling
+~~~
+{: .language-bash}
 
-Let's try to profile execution time for some functions of our `lcanalyzer` module. 
+Then let's write one possible implementation of the code for the problem above:
+
+~~~
+%%time
+# Example: Timing a block of code
+result = []
+for i in range(1000):
+    result.append(sum(range(i)))
+~~~
+{: .language-python}
+
+This code creates an empty list `result`, and then launches a `for` loop in which for each `i` in the range from 0 to 1000
+a sum of all numbers from 0 to `i` is calculated and appended to the list. This code produces the following  output:
+
+~~~
+CPU times: user 10.4 ms, sys: 0 ns, total: 10.4 ms
+Wall time: 10.2 ms
+~~~
+{: .output}
+
+As you can notice, there are several measurements taken:
+
+- **Wall Time**: Total elapsed time from start to end of a task, including waiting time for I/O operations or other processes.
+- **CPU Time**: The time the CPU spends executing the code, further divided into **User Time** 
+(time spent executing user code) and **System Time** (time spent on system-level operations, such as I/O or memory management).
+- In general, there is also **Overhead**, which is the additional time introduced by profiling tools themselves, which may slightly skew results.
+
+The double `%%` symbol means that `%%time` is applied to entire cell. Pay attention 
+that if you use `%time` instead, the result will be very different:
+
+~~~
+CPU times: user 2 μs, sys: 0 ns, total: 2 μs
+Wall time: 4.05 μs
+~~~
+{: .output}
+
+2 *micro*seconds (since it's `μs` and not `ms`) instead of ten *milli*seconds. These microseconds is the measurement of an execution time of an *empty line*,
+since `%time` command does not care about the code in the following lines.
+
+If you launch the code above several times, you'll notice that the measured time can differ quite a lot. 
+Depending on the specifics of the code and on the usage of system resources by other processes, 
+the runtime of a code block may vary. As a side-remark, if you develop code running on a spacecraft, 
+you want to avoid unpredictable runtime at all cost. To get a better measurement, 
+`%timeit` and `%%timeit` runs the code seven times and produces mean and standard deviation of the execution time. This command
+also discards outlying measurements that are likely caused by temporary system slowdowns (e.g. caused by other software that is running on your PC).
+
+~~~
+%%timeit
+# Example: Timing a block of code with 'timeit'
+result = []
+for i in range(1000):
+    result.append(sum(range(i)))
+~~~
+{: .language-python}
+
+~~~
+4.43 ms ± 35.2 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+~~~
+{: .output}
+
+The `7 runs, 100 loops each` tells us that the code was executed 7x100 times in total. While 7 runs is the set default value, the number of the loops
+is calculated automatically depending on how fast your code is, so that profiling didn't take too much time. You can change the number of
+runs and loops using the flags `-n` and `-r`, for example, like this: `%%timeit -n 4 -r 10` to run the code 4 times, with 10 loops in each run. 
+Another useful flag is `-o` that allows you to store the result of the profiling in a variable:
+
+~~~
+%%timeit -n 4 -r 10 -o
+# Example: Timing a block of code with saving the profiling result
+result = []
+for i in range(1000):
+    result.append(sum(range(i)))
+~~~
+{: .language-python}
+
+~~~
+# In a new cell we save the content of the temporary
+# variable '_' into a new variable 'measure'
+measure = _
+measure
+~~~
+{: .language-python}
+
+~~~
+<TimeitResult : 5.16 ms ± 1.56 ms per loop (mean ± std. dev. of 10 runs, 4 loops each)>
+~~~
+{: .output}
+
+`measure` variable is a `TimeitResult` object that has some useful methods that allow us to see e.g. the value of the worst measurement
+and the measurements of all runs.
+
+## Memory Profiling with Magics
+
+On machines with limited RAM, we could also consider profiling memory usage. For this we can install more magic commands, e.g. from [Python Package Index](https://pypi.org/)
+
+~~~
+$ python -m pip install ipython-memory-magics
+~~~
+{: .language-python}
+
+and load the external memory magic via
+
+~~~
+%load_ext memory_magics
+~~~
+{: .language-python}
+
+Now we can analyze the memory usage in our cell
+
+~~~
+%%memory
+# Example: Memory usage
+result = []
+for i in range(1000):
+    result.append(sum(range(i)))
+~~~
+{: .language-python}
+
+The output of this should look as follows:
+
+~~~
+RAM usage: cell: 35.62 KiB / 35.79 KiB
+~~~
+{: .output}
+
+This reports *current* and *peak* memory usage of the code. Another useful
+option is to use `%memory -n` command in an empty cell, which will print how much RAM the whole current *notebook*
+is taking.
+
+~~~
+RAM usage: notebook: 158.61 MiB
+~~~
+{: .output}
 
 > ## Execution time with Magics
-> Create a new branch called `profiling`
-> and execute the Magic commands above to measure execution time for functions `max_mag` and `plot_unfolded`.
+> 
+> Use Magic commands to measure execution time for functions `max_mag` and `plot_unfolded`.
 >
 > > ## Solution
 > >
-> > First, we need to create a new branch:
-> > ~~~
-> > $ git checkout develop
-> > $ git checkout -b profiling
-> > ~~~
-> > {: .language-bash}
-> >
-> > Next, in the `light-curve-analysis.ipynb` we can import the `max_mag` function and use `%time` command:
-> > from lcanalyzer.models import max_mag
-> >
+> > Either in a new section of the `light-curve-analysis.ipynb` notebook
+> > or in a new notebook we can import the `max_mag` function and use `%time` command:
+> > 
 > > ~~~
 > > from lcanalyzer.models import max_mag
 > > ...
-> > %time lcmodels.max_mag(LC[bands[b]],mag_col=mag_col)
+> > %time lcmodels.max_mag(lc[bands[b]],mag_col=mag_col)
 > > ~~~
 > > {: .language-python}
 > > 
@@ -120,11 +255,11 @@ Let's try to profile execution time for some functions of our `lcanalyzer` modul
 > >
 > > And we see that this command takes only a few microseconds to run.
 > > Pay attention that in order for this command to work, it should be in the same line as the
-> > code you are profiling. Otherwise, you need to use a *cell* Magic preceded by double `%`.
+> > code you are profiling. Otherwise, you need to use a *cell* Magic preceded by `%%`.
 > >
 > > Next use `%timeit` on a plotting function:
 > > ~~~
-> > %timeit views.plot_unfolded(LC[bands[b]],time_col=time_col,mag_col=mag_col,color=plot_filter_colors[b],marker=plot_filter_symbols[b])
+> > %timeit views.plot_unfolded(lc[bands[b]],time_col=time_col,mag_col=mag_col,color=plot_filter_colors[b],marker=plot_filter_symbols[b])
 > > ~~~
 > > {: .language-python}
 > >
@@ -132,26 +267,60 @@ Let's try to profile execution time for some functions of our `lcanalyzer` modul
 > > 347 ms ± 9.54 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 > > ~~~
 > > {: .output}
+> > 
 > > Wow, what happened? We got seven copies of the same plot! This is because `%timeit` repeats the execution and measures the average time.
 > > Plotting also takes noticeably longer time that a simple calculation of a maximum value.
+> > 
 > {: .solution}
->
+>  
 {: .challenge}
 
-As you can notice, the output of these Magic commands contains several different time values:
+## A Few Words on Optimization
 
-- **Wall Time**: Total elapsed time from start to end of a task, including waiting time for I/O operations or other processes.
-- **CPU Time**: The time the CPU spends executing the code, further divided into **User Time** 
-(time spent executing user code) and **System Time** (time spent on system-level operations, such as I/O or memory management).
-- In general, there is also **Overhead**, which is the additional time introduced by profiling tools themselves, which may slightly skew results.
+Let's take our 'partial sums of series' problem and think on how we can optimize it to run faster. 
+You may remember that Python has [list comprehensions](https://docs.python.org/2/tutorial/datastructures.html#list-comprehensions)
+syntax that is often recommended as a faster tool than `for` loops. We can rewrite the code above to use list comprehensions
+and use `%%timeit` magic to profile it.
 
-`timeit` Magics also report standard deviation of the execution time, calculated from the best run from a set of iterations,
-so that outliers from temporary system slowdowns (e.g. caused by other software that is running on your PC) are not included.
+~~~
+%%timeit
+# Implementation with list comprehension
+result = [sum(range(i)) for i in range(1000)]
+~~~
+{: .language-python}
+
+~~~
+4.43 ms ± 71 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+~~~
+{: .output}
+
+Well... Actually, we got pretty much the same result. For this particular task, there is no computational
+gain in using list comprehension, although the code is cleaner and more readable this way. For some 
+problems, list comprehensions may work even slower than `for` loops, which is why time profiling
+is something to do *before* you start optimization - it may turn out that the bottleneck is in a completely different
+part of the program than you thought. In order to optimise this specific piece of code, we would have to be
+smarter and use an equation instead of the bruteforce approach:
+
+~~~
+%%timeit
+# Optimized implementation using mathematical formula for summation
+result = [(i * (i - 1)) // 2 for i in range(1000)]
+~~~
+{: .language-python}
+
+~~~
+77.6 μs ± 812 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+~~~
+{: .output}
+
+Now the execution time is in dozens of *micro*seconds, which is two orders better than before! 
+That's quite an improvement.
 
 ## **What If You Don’t Use Jupyter?**
 
 Of course, Jupyter Magics isn't the only tool for time profiling. In fact, Python has built-in modules just for this, such as `time` and `timeit`, 
 that can be used in any IDE. 
+
 ~~~
 import time
 ...
@@ -166,11 +335,11 @@ Execution time: 0.00083 seconds
 ~~~
 {: .output}
 
-  - The `time.time()` function records the current time in seconds since the epoch (typically January 1, 1970).
-  - This value is stored in the variable `start_time` before the code block is executed.
-  - After the code block, `time.time()` is called again to get the current time.
-  - The difference between the current time and `start_time` gives the total execution time.
-  - This elapsed time is formatted to five decimal places and printed.
+In this snippet of code, `time.time()` function records the current time in seconds since the epoch (typically January 1, 1970).
+ This value is stored in the variable `start_time` before the code block is executed. 
+After the code block, `time.time()` is called again to get the current time.
+The difference between the current time and `start_time` gives the total execution time.
+This elapsed time is formatted to five decimal places and printed.
 
 To get a more reliable estimate, for the small snippets of code we can use `timeit.repeat()` method. 
 It executes the timing multiple times and provides a list of results, making it easier to analyze performance under changing environments.
@@ -189,114 +358,18 @@ Best Execution Time: 0.1637995233759284
 ~~~
 {: .output}
 
-The parameters of this function:
-- `repeat=5`: Runs the benchmark 5 times, producing a list of 5 results. Each result corresponds to the total execution time for the specified number of iterations.
-- `number=1000`: Executes the code snippet 1000 times per benchmark run.
-
-The output:
-- **List of Results**: Each value in the `results` list represents the total time for 1000 executions of the code snippet.
-- **Best Execution Time**: Use `min(results)` to find the fastest execution time across the 5 runs. This is often the most reliable measure of the code's performance as it minimizes the impact of temporary system noise or background processes.
-
+The `repeat` and `number` parameters of this function work similarly to the number of runs and number of loops for the `%%timeit`.
 However, this method cannot be used conveniently for e.g. measuring execution time of functions. For this, we need a more advanced tool.
 
-## **References on Time Profiling**
-
-**1. Official Documentation**
-- [Python timeit Module](https://docs.python.org/3/library/timeit.html)  
-  Detailed explanation of how to use the `timeit` module for benchmarking Python code.
-- [Python time Module](https://docs.python.org/3/library/time.html)  
-  Overview of the `time` module, including functions like `time()`, `sleep()`, and more.
-
-**2. Jupyter Notebook Magics**
-- [IPython Magic Commands Documentation](https://ipython.readthedocs.io/en/stable/interactive/magics.html)  
-  Comprehensive list of magic commands available in Jupyter and IPython, including `%time`, `%timeit`, and others.
-- **GeeksforGeeks: Time Profiling in Python**  
-  [Link](https://www.geeksforgeeks.org/profiling-in-python/)  
-  A beginner-friendly introduction to time profiling methods in Python.
-
-
-## IPython Magics for casual profiling
-
-Before discussing the most important tools for profiling, we are briefly introducing a more 
-pedestrian approach to assess the runtime of a single code block. For this purpose we are going 
-to use IPython Magics, which are part of the respective IPython kernel or specified by users. 
-Either way, the command needs to be prefixed with at least one `%` symbol and can run various operations. 
-A simple example is to list the files in the current working directory:
-
-~~~
-%ls
-~~~
-{: .language-python}
-
-On most operating systems you can execute the following function to analyze the runtime:
-
-~~~
-$ time python myscript.py
-~~~
-{: .language-python}
-
-If we are using a juypyter notebook with an IPython kernel, the following the `%time` magic can be used which is used for timing code blocks. 
-
-~~~
-%time [x**2 for x in range(7777777)]
-~~~
-{: .language-python}
-
-It reports the so-called wall clock time, i.e. the elapsed actual time, but also the user CPU time. The single `%` symbol means that `%time` is applied to single cell. To apply magic commands to an entire cell, we use `%%`:
-
-~~~
-%%time 
-squares = [x**2 for x in range(7777777)]
-quadrupels = [x**4 for x in range(7777777)]
-~~~
-{: .language-python}
-
-Depending on the structure of the datasets in question or if stochastic processes are involved, the runtime of a code block may vary. As a side-remark, if you develop code running on a spacecraft, you want to avoid unpredictable runtime at all cost. To get a better measurement, `%%timeit` comes with extra options to test a block multiple times, which also allows us to get a mean and standard deviation:
-
-~~~
-%%timeit
-squares = [x**2 for x in range(7)]
-quadrupels = [x**4 for x in range(7)]
-~~~
-{: .language-python}
-
-The output of this reveals that after 7 runs with 100,000 the following measurement is available:
-
-~~~
-4.51 μs ± 16 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
-~~~
-{: .language-python}
-
-The pedestrian approach of using `%timeit` works for blocks of code but testing multiple functions, the number of calls and time it takes can be helpful. The goal is usually to identify the slowest function, but the difference between wall time and user CPU time can reveal that file operations with local or remote drives may be a limiting factor. On machines with limited RAM, we could also consider profiling memory usage. For this we can install more magic commands, e.g. from [Python Package Index](https://pypi.org/)
-
-~~~
-$ python -m pip install ipython-memory-magics
-~~~
-{: .language-python}
-
-and load the external memory magic via
-
-~~~
-%load_ext memory_magics
-~~~
-{: .language-python}
-
-Now we can analyze the memory usage in our cell
-
-~~~
-%%memory
-squares = [x**2 for x in range(7777)]
-quadruples = [x**4 for x in range(7777)]
-~~~
-{: .language-python}
-
-The output of this should look as follows:
-
-~~~
-RAM usage: cell: 590.7 KiB / 590.94 KiB
-~~~
-{: .language-python}
-
+> ## Additional reading on 'time' module and 
+> 
+> Some additional sources to look into are:
+>
+> - [Python timeit Module](https://docs.python.org/3/library/timeit.html):  Detailed explanation of how to use the `timeit` module for benchmarking Python code.
+> - [Python time Module](https://docs.python.org/3/library/time.html): Overview of the `time` module, including functions like `time()`, `sleep()`, and more.
+> - [Profiling in Python](https://www.geeksforgeeks.org/profiling-in-python/): A beginner-friendly introduction to time profiling methods in Python.
+>   
+{: .callout}
 
 ## Resource profiling with offline profilers
 
