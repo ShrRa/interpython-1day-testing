@@ -242,7 +242,7 @@ RAM usage: notebook: 158.61 MiB
 > > ~~~
 > > from lcanalyzer.models import max_mag
 > > ...
-> > %time lcmodels.max_mag(lc[bands[b]],mag_col=mag_col)
+> > %time lcmodels.max_mag(lc[lc_bands_masks[b]],mag_col=mag_col)
 > > ~~~
 > > {: .language-python}
 > > 
@@ -259,7 +259,7 @@ RAM usage: notebook: 158.61 MiB
 > >
 > > Next use `%timeit` on a plotting function:
 > > ~~~
-> > %timeit views.plot_unfolded(lc[bands[b]],time_col=time_col,mag_col=mag_col,color=plot_filter_colors[b],marker=plot_filter_symbols[b])
+> > %timeit views.plot_unfolded(lc[lc_bands_masks[b]],time_col=time_col,mag_col=mag_col,color=plot_filter_colors[b],marker=plot_filter_symbols[b])
 > > ~~~
 > > {: .language-python}
 > >
@@ -294,9 +294,10 @@ result = [sum(range(i)) for i in range(1000)]
 ~~~
 {: .output}
 
-Well... Actually, we got pretty much the same result. For this particular task, there is no computational
-gain in using list comprehension, although the code is cleaner and more readable this way. For some 
-problems, list comprehensions may work even slower than `for` loops, which is why time profiling
+Well... Actually, we got pretty much the same result. For this particular case, there is no computational
+gain in using list comprehension, although the code is cleaner and more readable this way. However, if we experiment
+with the maximum value of the range, we'll start noticing the gain with the increase of this value. That said,
+for some problems list comprehensions may work even slower than `for` loops, which is why time profiling
 is something to do *before* you start optimization - it may turn out that the bottleneck is in a completely different
 part of the program than you thought. In order to optimise this specific piece of code, we would have to be
 smarter and use an equation instead of the bruteforce approach:
@@ -325,7 +326,7 @@ that can be used in any IDE.
 import time
 ...
 start_time = time.time()
-max_mag = lcmodels.max_mag(LC[bands[b]],mag_col=mag_col)
+max_mag = lcmodels.max_mag(lc[lc_bands_masks[b]],mag_col=mag_col)
 print(f"Execution time: {time.time() - start_time:.5f} seconds")
 ~~~
 {: .language-python}
@@ -339,8 +340,10 @@ In this snippet of code, `time.time()` function records the current time in seco
  This value is stored in the variable `start_time` before the code block is executed. 
 After the code block, `time.time()` is called again to get the current time.
 The difference between the current time and `start_time` gives the total execution time.
-This elapsed time is formatted to five decimal places and printed.
-
+This elapsed time is formatted to five decimal places and printed. The `time`
+ library is useful also in notebooks, when we want to get a detailed execution time log from the inside
+ of a larger piece of code, e.g. a function.
+ 
 To get a more reliable estimate, for the small snippets of code we can use `timeit.repeat()` method. 
 It executes the timing multiple times and provides a list of results, making it easier to analyze performance under changing environments.
 
@@ -373,114 +376,147 @@ However, this method cannot be used conveniently for e.g. measuring execution ti
 
 ## Resource profiling with offline profilers
 
-Profiling is the essential technique for identifying bottlenecks and optimize performance in larger projects. This process can significantly impact both the success of a project and its environmental footprint, as high-performance code may consume more resources and energy. Finding a balance between the time it takes to develop code and the cost of running the code itself motivates us to analyze projects in a more detailed fashion. Relying on the pedestrian approach in the last section can be useful for benchmarking smaller blocks of code, but it is not a sustainable approach for larger projects. Prioritizing development requires to understand
+Jupyter Magics, while extremely useful for small-scale profiling, aren't a suitable tool for larger projects. Prioritizing development requires to understand multiple
+aspects of the code 'under-the-hoods':
 
-* The frequency at which a function is called
-* The execution time for each function
-* The performance of different algorithms 
-* Benchmarking pure python vs external C code
-* Identify bottlenecks and gauge how involved a change is compared to the development effort
+- The frequency at which a function is called,
+- The execution time for each function,
+- The performance of different algorithms, 
+- Benchmarking pure python vs external C code,
+- Identify bottlenecks and gauge how involved a change is compared to the development effort.
 
-As a rule of thumb, software developers tend to profile work on improving 10 to 20% of their codebase. To accomplish this we can use `cProfile` to prepare the performance statistics and utilize `snakeviz` to visualize the statistics in a more user friendly way. To install `snakeviz` run
+There are numerous tools for these inquiries. Here we will consider the [`cProfile`](https://docs.python.org/3/library/profile.html#) and
+[`snakeviz`](https://jiffyclub.github.io/snakeviz/#snakeviz) modules.
 
+`cProfile` is a built-in Python module that measures how many times each function was called from within the code
+that is being profiled and how much time the execution of each function took. `cProfile` is partially written in C, which makes it faster
+and reduces the overhead that is inevitably added by any profiler. If `cProfile` doesn't work on your PC, you can try to use pure Python version
+of this module called `profile`.
+
+`cProfile` can be imported like any other package, and then used to profile any code by passing it in quotation marks to the function `run`:
+~~~
+import cProfile
+
+profiler = cProfile.Profile()
+profiler.run('[sum(range(i)) for i in range(10000)]')
+profiler.print_stats(sort='cumulative')
+~~~
+{: .language-python}
+
+~~~
+         10004 function calls in 0.616 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.616    0.616 {built-in method builtins.exec}
+        1    0.000    0.000    0.616    0.616 <string>:1(<module>)
+        1    0.007    0.007    0.616    0.616 <string>:1(<listcomp>)
+    10000    0.609    0.000    0.609    0.000 {built-in method builtins.sum}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+~~~
+{: .output}
+
+First we are initializing a `Profile()` instance, then we execute the profiling, and then printing the output sorted
+by the cumulative time spent in each of the funtions. The columns in this statistical table report how many times
+each functon was called (`ncalls`; we can see that in this example the only function with multiple calls in `sum`), how much time in
+total was spent in each function (`tottime`; it does not take into account the time spent in sub-functions), average time per each call (`percall`),
+how much time was spent in this function taking into account sub-functions (`cumtime`) and average time per call considering sub-calls (second `percall`).
+We sorted this output by the `cumtime` column, however, if we change sorting to `tottime`, we'll see that most of the time was spent in the `sum` functions. 
+Which is not surprising, considering that we made a 10000 calls of this function!
+
+### Visualizing Profiling Output with SnakeViz
+
+An output table of `cProfile` can be really large and confusing. It would be nice to have a visual representation of this data.
+Fortunately, there is a tool for this, a module called `snakeviz`.
+
+First let's install it and update the `requirements.txt` file:
 ~~~
 $ python -m pip install snakeviz
+$ pip freeze > requirements.txt
 ~~~
 {: .language-bash}
 
-
-You can generate performance statistics for a script `myscript.py` using `cProfile` with the following command:
-
-~~~
-$ python -m cProfile -o output.stats myscript.py
-~~~
-{: .language-bash}
-
-An interactive view of these statistics can be obtained by running:
-
-~~~
-$ snakeviz output.stats
-~~~
-{: .language-bash}
-
-This will open in your browser, showing an interactive table that is particularly useful for inspecting the number of function calls and elapsed time per function call (among other metrics). We are using our `squares` and `quadruples` functions to illustrate how the output looks like. The table can be sorted by any column. Performance statistics show not only your functions, but also functions from the standard library, e.g. list comprehensions are shown separately. 
-
-![Snakeviz table](../fig/33_snakeviz_table.png){: .image-with-shadow}
-
-Two visualization options are available: an icicle view, which displays the function calls as cumulative timings icicles with corresponding line numbers, and a sunburst diagram, both of which allow you to explore the call hierarchy.
-
-![Snakeviz icicle](../fig/33_snakeviz_icicle.png){: .image-with-shadow }
-
-The sunburst diagram looks as follows:
-
-![Snakeviz sunburst](../fig/33_snakeviz_sunburst.png){: .image-with-shadow}
-
- 
- If you prefer to run the profiler directly within a Jupyter Notebook, you need to load the external snakeviz magic:
+In order to use it from within the notebook, we have to load it as an external magic:
 
 ~~~
 %load_ext snakeviz
 ~~~
 {: .language-python}
 
-and test it using our example
-
 ~~~
-def squares(n):
-    squares = [x**2 for x in range(n)]
-
-%snakeviz squares(777)
+%snakeviz res=[sum(range(i)) for i in range(10000)]
 ~~~
 {: .language-python}
 
-Based on the output, we would mention a tool providing call graphs in passing: [gprof2dot](https://pypi.org/project/gprof2dot/) can be used to plot call graphs in the following way, which some users could find more intuitive than the default `snakeviz` plots:
+![Snakeviz icicle](../fig/imgDummy.png){: .image-with-shadow}
 
- ![gprof2dot example](../fig/33_gprof2dot.png){: .image-with-shadow}
- 
-We would like to conclude this session by illustrating how you can integrate and run the `cProfile` profiler into your main code, and we are testing two calls of our function squares
+Now we have a nice interactive representation of the time spent in each function, and it is obvious that the summation itself takes the longest. 
+We can choose between two formats of the visualization using 'Style' drop-down menu, set the maximum depth of the call stack that is being visualized and 
+set the cutoff value for the functions that won't be placed on the plot (e.g. by default the functions that take less than 1/1000 of the execution time
+of the parent function are omitted). By clicking on any of the bars we go deeper into the callstack. 
+Under the plot we have the same statistical table as the `cProfile` produces.  There is also a way to open this visualization in a new browser tab by
+passing the flag `-t` after the command.
 
-~~~
-from cProfile import Profile
-profiler = Profile()
-
-profiler.run('squares(777777); squares(777777)')
-profiler.disable()
-profiler.print_stats(sort='cumulative')
-~~~
-{: .language-python}
-
-this should return a list as follows which can also be written to disk using `profiler.dump_stats(filename)`:
-
-~~~
- 7 function calls in 0.522 seconds
-
-   Ordered by: cumulative time
-
-   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
-        1    0.000    0.000    0.522    0.522 {built-in method builtins.exec}
-        1    0.011    0.011    0.522    0.522 <string>:1(<module>)
-        2    0.000    0.000    0.511    0.256 890459632.py:5(squares)
-        2    0.511    0.256    0.511    0.256 890459632.py:6(<listcomp>)
-        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
-~~~
-{: .output}
-
-> ## Optional Exercise: Profile lightcurve
+> ## Other Visualization Tools for cProfile
 >
-> Try to profile the methods devised for lightcurve analysis. 
+> `SnakeViz` isn't the only visualization tool for profiling. You may want to look at the [gprof2dot](https://pypi.org/project/gprof2dot/)
+> which plots call graphs in the following way, which some users could find more intuitive than the default `snakeviz` plots:
+> 
+> ![gprof2dot example](../fig/33_gprof2dot.png){: .image-with-shadow}
+> 
+{: .callout}
+
+> ## Use SnakeViz to profile the lcanalyzer.calc_stats() function and optimize it for a quicker execution
+>
+> Apply the `%snakeviz` to the lcanalyzer.calc_stats() function. Have a look at the output, identify which functions are taking the longest
+> to execute and optimize this code to execute faster.
 >
 > > ## Solution
-> > tbd
+> >
+> > After running the following code: `%snakeviz calc_stats(lc_dict,bands,'psfMag')`, we obtain a visualization that looks similar to this:
+> > ![Snakeviz output for the lcanalyzer.calc_stat() function](../fig/imgDummy.png){: .image-with-shadow}
+> > We can notice that a lot of time is spent in the `__getitem__` `pandas` core function, that is invoked when we use indexing to retrieve some element
+> > from a DataFrame. The `pandas` statistical functions take approximately the same amount of time.
+> >
+> > One thing that can be done right away is reducing the number of indexing calls and switching to the `numpy` statistical functions by converting our data into
+> > a `numpy.array`, e.g. like this:
+> >
+> > ~~~
+> > def calc_stats_nparrs(lc, bands, mag_col):
+> >     # Calculate max, mean and min values for all bands of a light curve
+> >     stats = {}
+> >     for b in bands:
+> >         arr = np.array(lc[b][mag_col])
+> >         stat = {'max':np.max(arr),'mean':np.mean(arr),'min':np.min(arr)}
+> >         stats[b] = stat
+> >     return stats
+> > ~~~
+> > {: .language-python}
+> >
+> > The profiling result for this function will look like this:
+> > 
+> > ![Snakeviz output for the lcanalyzer.calc_stat_ndarrs() function](../fig/imgDummy.png){: .image-with-shadow}
+> >
+> > The new version of the function works almost 6 times faster, however, for this we had to change the format of the output.
+> > Meaning, we have to rewrite the higher levels of the code and our tests, and, perhaps, rethink in general the data architecture of our
+> > software.
+> > 
 > {: .solution}
 > 
 {: .challenge}
 
-
-## Resource profiling with online profilers
-
-Profiling a running project can be an invaluable tool for identifying and addressing issues, as it catches unusual events that may not be obvious during development. While this course focuses on offline profiling techniques using tools like `cProfile` and `snakeviz`, we would like to mention that monitoring performance in real-time can be crucial for certain projects. In this context, we would like to highlight two repositories as starting points for further reading:
-
-1. [py-spy](https://github.com/benfred/py-spy)
-2. [pyinstrument](https://github.com/joerick/pyinstrument)
+> ## Resource profiling with online profilers
+>
+> Profiling a running project can be an invaluable tool for identifying and addressing issues, 
+> as it catches unusual events that may not be obvious during development. 
+> It is possible to do a real-time performance monitoring, although the detailed info on the corresponding instruments
+> goes beyond the scope of today's workshop. As starting points for further reading, you can have a look at these two 
+> repositories:
+> 
+> 1. [py-spy](https://github.com/benfred/py-spy)
+> 2. [pyinstrument](https://github.com/joerick/pyinstrument)
+> 
+{: .callout}
 
 {% include links.md %}
