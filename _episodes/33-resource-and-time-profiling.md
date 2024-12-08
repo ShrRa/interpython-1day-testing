@@ -11,7 +11,7 @@ objectives:
 keypoints:
 - "For our software to be usable, we need to take care not only of its correctness, but also of its performance."
 - "Profiling is necessary for large computationally expensive projects or for the software that will be processing large datasets."
-- "Finding bottlenecks and ineffective subroutines should be done before parallelization of the code."
+- "Finding bottlenecks and ineffective subroutines is an important part of refactoring, but it is also a useful thing to do at the stage of planning the architecture of the software."
 ---
 
 ## What is Software Profiling?
@@ -476,7 +476,7 @@ passing the flag `-t` after the command.
 > >
 > > After running the following code: `%snakeviz calc_stats(lc_dict,bands,'psfMag')`, we obtain a visualization that looks similar to this:
 > > ![Snakeviz output for the lcanalyzer.calc_stat() function](../fig/33_snakeviz_calcstat_1.png){: .image-with-shadow}
-> > We can notice that a lot of time is spent in the `__getitem__` `pandas` core function, that is invoked when we use indexing to retrieve some element
+> > We can notice that a lot of time is spent in the `from_records` `pandas` core function and `__getitem__`, that is invoked when we use indexing to retrieve some element
 > > from a DataFrame. The `pandas` statistical functions take approximately the same amount of time.
 > >
 > > One thing that can be done right away is reducing the number of indexing calls and switching to the `numpy` statistical functions by converting our data into
@@ -498,9 +498,10 @@ passing the flag `-t` after the command.
 > > 
 > > ![Snakeviz output for the lcanalyzer.calc_stat_ndarrs() function](../fig/33_snakeviz_calcstat_2.png){: .image-with-shadow}
 > >
-> > The new version of the function works almost 6 times faster, however, for this we had to change the format of the output.
-> > Meaning, we have to rewrite the higher levels of the code and our tests, and, perhaps, rethink in general the data architecture of our
-> > software.
+> > The new version of the function works almost 6 times faster, however, for this we had to change the format of the output. We could have left it as it was,
+> > but then the execution time gain would be smaller. With the current changes to the function,
+> > we have to rewrite the higher levels of the code and our tests, and, perhaps, rethink in general the data architecture of our
+> > software. 
 > > 
 > {: .solution}
 > 
