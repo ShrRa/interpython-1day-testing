@@ -14,44 +14,61 @@ keypoints:
 - "Finding bottlenecks and ineffective subroutines should be done before parallelization of the code."
 ---
 
-
-
-## Jupyter Magics
-
-- What is magics
-- Which kinds of magics exist
-- How to use them for time profiling
-- What if you don't use Jupyter?
-
----
-
 ## What is Software Profiling?
 
-Profiling is...
+We may have a software that is doing everything that we want it to do, with its codebase well-written 
+and perfectly comprehensible, but this does not yet guarantee that this software will be applicable to the real-world problems.
+For example, its interface can be so convoluted that the user can't figure out how to access the feature of interest. Other common
+issue is when the software has such high [computational complexity](https://en.wikipedia.org/wiki/Computational_complexity) that it 
+can be used only on small datasets, or on computer clusters with hundreds of GB of memory.
 
-Time profiling is the process of measuring the time taken by a program, 
-a specific block of code, or individual functions to execute. It helps 
-developers analyze the performance of their software by identifying bottlenecks, 
-inefficient operations, or high-latency components. Time profiling provides insights 
-into how the program uses computational resources (CPU, memory, I/O), enabling performance optimization.
+The process of estimating how much time the execution of the software will take and how much memory or other resources it will need
+is called **profiling**. Profiling is a form of **dynamic program analysis**, meaning that it requires launching the software and measuring 
+its performance and logging its activity as it runs. One of the main purposes of profiling is to identify *bottlenecks*,
+inefficient operations, or high-latency components of the program, so that these parts could be optimized to run faster or
+to use less resources. It is worth noting that for many problems there is a [space-time tradeoff](https://en.wikipedia.org/wiki/Space%E2%80%93time_tradeoff),
+which essentially means that by optimizing the program in respect to the execution time we make it less memory-efficient, and vice versa.
 
-It is ok to skip profiling when working on small projects that can be easily executed on your PC 
+How necessary profiling is for academic software development?
+Well, it is ok to skip profiling when working on small projects that can be easily executed on your PC 
 or within a Google Colab notebook. However, as your projects get larger, the execution of your code
 may start taking days and weeks, or it may start crashing due to the lack of RAM or CPU power. Another
-example when the efficiency is crucial is executing your code at the astronomical Data Acess portals,
+example when the efficiency is crucial is executing your code at astronomical data access portals,
 such as [Rubin Science Platform](https://data.lsst.cloud/) or [Astro Data Lab](https://datalab.noirlab.edu/). 
 These platforms provide an opportunity to work with large astronomical datasets without downloading them
-on your machine, however, the CPU and memory allocated to each user are limited. Code profiling helps us to find bottlenecks
-in our code, to determine which implementation is more efficient and to make our code scalable. And if you are developing
-software that will be used by someone else, it also helps you to make your users happier (and in some cases
+to your machine, however, the CPU and memory allocated to each user are limited. Code profiling helps us 
+to determine which implementation is more efficient and to make our code scalable. And if you are developing
+software that will be used by someone else, it also makes the users happier (and in some cases
 ensures that the software will be used at all).
+
+In this introduction to profiling we mostly concentrate on time profiling, with some notes on memory profiling. 
+We start with the Jupyter built-in tool, **Jupyter Magics**. 
 
 ## **What Are Jupyter Magics?**
 
-Jupyter Magics are special commands in Jupyter Notebooks that extend functionality by providing shortcuts for tasks 
+Jupyter Magics are special commands in Jupyter Notebooks/Lab that extend functionality by providing shortcuts for tasks 
 like timing, debugging, profiling, or interacting with the system, e.g. executing terminal commands from withing the notebook. They come in two forms:
 - **Line Magics**: Prefixed with `%`, they operate on a single line of code.
 - **Cell Magics**: Prefixed with `%%`, they apply to the entire cell.
+
+> ## Why Magics aren't really part of the Jupyter
+> 
+> To be specific, Magic commands are part of the *Python kernels* that are used by the Jupyter Notebook or Lab.
+> The *kernels* are separate processes, language-specific computational engines that are executing the commands you gave
+> it with the code. The kernel with which your notebooks is launched is separate from the *frontend* processes that handle,
+> for example, the tasks of adding or removing cells, or even rendering the characters when you type them during the execution of the
+> previous cell. Think on how different it is from when you launch some commands in your PC terminal: there, you cannot
+> type the next commands until the previous one finish executing. The separation of the Jupyter frontend from the kernel is what allows to
+> avoid this behavior.
+>
+> By default, Jupyter uses [ipykernel](https://github.com/ipython/ipykernel), and Magic commands are a part of it. However,
+> many different kernels for Jupyter exist, including some developed for other languages, such as R or Julia. Whether Magic commands are available for
+> these kernels depends on their implementation.
+> 
+> If you want to know more how kernels work, [here](https://www.geeksforgeeks.org/managing-jupyter-kernels-a-comprehensive-guide/) is a generic overview with some
+> practical examples.
+> 
+{: .callout}
 
 There are plenty Magics cheatsheets online, however, the easiest way to look up what kinds of comands are there is to use Magics itself:
 - `%lsmagic` - prints a list of all Magics available;
@@ -66,6 +83,8 @@ For time profiling, the most useful Magics are:
 - **`%%time`**: Measures execution time of an entire cell.
 - **`%timeit`**: Repeats timing of a line for reliable results.
 - **`%%timeit`**: Repeats timing of a cell for average results.
+
+
 
 Let's try to profile execution time for some functions of our `lcanalyzer` module. 
 
