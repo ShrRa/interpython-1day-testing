@@ -74,8 +74,8 @@ There are plenty Magics cheatsheets online, however, the easiest way to look up 
 - `%lsmagic` - prints a list of all Magics available;
 - `%quickref` - prints a reference card on the available Magic commands.
 
-![`%lsmagic` prints a list of all Magics](../fig/imgDummy.png){: .image-with-shadow width="600px"}
-![`%quickref` prints a reference card on Magic commands](../fig/imgDummy.png){: .image-with-shadow width="600px"}
+![`%lsmagic` prints a list of all Magics](../fig/33_magics_1.png){: .image-with-shadow width="600px"}
+![`%quickref` prints a reference card on Magic commands](../fig/33_magics_2.png){: .image-with-shadow width="600px"}
 
 ## Time Profiling with Magics
 
@@ -449,7 +449,7 @@ In order to use it from within the notebook, we have to load it as an external m
 ~~~
 {: .language-python}
 
-![Snakeviz icicle](../fig/imgDummy.png){: .image-with-shadow}
+![Snakeviz icicle](../fig/33_snakeviz_sums.png){: .image-with-shadow}
 
 Now we have a nice interactive representation of the time spent in each function, and it is obvious that the summation itself takes the longest. 
 We can choose between two formats of the visualization using 'Style' drop-down menu, set the maximum depth of the call stack that is being visualized and 
@@ -475,7 +475,7 @@ passing the flag `-t` after the command.
 > > ## Solution
 > >
 > > After running the following code: `%snakeviz calc_stats(lc_dict,bands,'psfMag')`, we obtain a visualization that looks similar to this:
-> > ![Snakeviz output for the lcanalyzer.calc_stat() function](../fig/imgDummy.png){: .image-with-shadow}
+> > ![Snakeviz output for the lcanalyzer.calc_stat() function](../fig/33_snakeviz_calcstat_1.png){: .image-with-shadow}
 > > We can notice that a lot of time is spent in the `__getitem__` `pandas` core function, that is invoked when we use indexing to retrieve some element
 > > from a DataFrame. The `pandas` statistical functions take approximately the same amount of time.
 > >
@@ -496,7 +496,7 @@ passing the flag `-t` after the command.
 > >
 > > The profiling result for this function will look like this:
 > > 
-> > ![Snakeviz output for the lcanalyzer.calc_stat_ndarrs() function](../fig/imgDummy.png){: .image-with-shadow}
+> > ![Snakeviz output for the lcanalyzer.calc_stat_ndarrs() function](../fig/33_snakeviz_calcstat_2.png){: .image-with-shadow}
 > >
 > > The new version of the function works almost 6 times faster, however, for this we had to change the format of the output.
 > > Meaning, we have to rewrite the higher levels of the code and our tests, and, perhaps, rethink in general the data architecture of our
