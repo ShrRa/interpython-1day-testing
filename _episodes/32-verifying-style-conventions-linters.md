@@ -1,7 +1,7 @@
 ---
 title: "Verifying Code Style Using Linters"
 start: false
-teaching: 15
+teaching: 10
 exercises: 10
 questions:
 - "What tools can help with maintaining a consistent code style?"
