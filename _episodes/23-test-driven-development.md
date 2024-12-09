@@ -1,7 +1,7 @@
 ---
 title: "Robust Software with Testing Approaches"
-teaching: 30
-exercises: 20
+teaching: 20
+exercises: 10
 questions:
 - "How can we make our programs more resilient to failure?"
 - "Can we use testing to speed up our work?"
