@@ -1,7 +1,7 @@
 ---
 layout: episode
 title: "Wrap-up"
-start: true
+start: false
 type: "wrap-up"
 colour: "#FBED65"
 teaching: 15
@@ -37,47 +37,33 @@ Reiterate some of the key messages.
 ## Summary
 As part of this course we have looked at a core set of
 established, intermediate-level software development tools and best practices
-for working as part of a team.
+for ensuring that your software is correct and usable in real life.
 The course teaches a selected subset of skills that have been tried and tested
 in collaborative research software development environments,
 although not an all-encompassing set of every skill you might need
 (check some [further reading](./#further-resources)).
 It will provide you with a solid basis for writing industry-grade code,
-which relies on the same best practices taught in this course:
+which relies on the same best practices taught in this course.
 
-- Collaborative techniques and tools play an important part
-  of research software development in teams,
+Things like unit testing, CI and profiling play an important part
+  of software development in large teams,
   but also have benefits in solo development.
   We've looked at the benefits of a well-considered development environment,
   using practices, tools and infrastructure
   to help us write code more effectively in collaboration with others.
-- We've looked at the importance of being able to
+
+We've looked at the importance of being able to
   verify the correctness of software and automation,
   and how we can leverage techniques and infrastructure
   to automate and scale tasks such as testing to save us time -
   but automation has a role beyond simply testing:
   what else can you automate that would save you even more time?
   Once found, we've also examined how to locate faults in our software.
-- We've gone beyond procedural programming and explored different software design paradigms,
-  such as object-oriented and functional styles of programming.
-  We've contrasted their pros, cons, and the situations in which they work best,
-  and how separation of concerns through modularity and architectural design
-  can help shape good software.
-- As an intermediate developer,
-  aspects other than technical skills become important,
-  particularly in development teams.
-  We've looked at the importance of good,
-  consistent practices for team working,
-  and the importance of having a self-critical mindset when developing software,
-  and ways to manage feedback effectively and efficiently.
 
 > ## Reflection Exercise: Putting the Pieces Together
-> As a group, reflect on the concepts
-> (e.g. tools, techniques and practices)
-> covered throughout the course,
-> how they relate to one another,
-> how they fit together in a bigger picture or skill learning pathways
-> and in which order you need to learn them.
+> As a group, reflect on what aspects of your work can benefit from applying the techniques and tools
+> you learned during this workshop. What would be the main issues preventing these workflow changes?
+> 
 > > ## Solution
 > > One way to think about these concepts is to
 > > make a list and try to organise them along two axes -
@@ -95,25 +81,6 @@ which relies on the same best practices taught in this course:
 > > but investing time to master more difficult concepts may pay off in the long run
 > > by saving you time and effort and helping reduce technical debt.
 > >
-> > ![Usefulness versus time to master grid](../fig/wrapup-perceived-usefulness-time.png){: .image-with-shadow width="800px"}
-> >
-> > Another way you can organise the concepts is using a
-> > [concept map](https://en.wikipedia.org/wiki/Concept_map)
-> > (a directed graph depicting suggested relationships between concepts)
-> > or any other diagram/visual aid of your choice.
-> > Below are some example views of tools and techniques covered in the course using concept maps.
-> > Your views may differ but that is not to say that either view is right or wrong.
-> > This exercise is meant to get you to reflect on what was covered in the course
-> > and hopefully to reinforce the ideas and concepts you learned.
-> >
-> > ![Overview of tools and techniques covered in the course](../fig/wrapup-concept-map.png){: .image-with-shadow width="800px"}
-> >
-> > A different concept map tries to organise concepts/skills based on their level of difficulty
-> > (novice, intermediate and advanced, and in-between!)
-> > and tries to show which skills are prerequisite for others
-> > and in which order you should consider learning skills.
-> >
-> > ![Overview of topics covered in the course based on level of difficulty](../fig/wrapup-concept-map-difficulty-level.png){: .image-with-shadow width="800px"}
 > {: .solution}
 {: .challenge}
 
@@ -121,8 +88,9 @@ which relies on the same best practices taught in this course:
 
 Below are some additional resources to help you continue learning:
 
-- [Additional episode on persisting data](../persistence)
-- [Additional episode on databases](../databases)
+- [Foundations of Astronomical Data Science Carpentries Workshop](https://datacarpentry.github.io/astronomy-python/)
+- [A previous InterPython workshop materials, covering collaborative usage of GitHub, 
+Programming Paradigms, Software Architecture and many more](https://shrra.github.io/python-intermediate-development/)
 - [CodeRefinery courses on FAIR
   (Findable, Accessible, Interoperable, and Reusable)
   software practices][coderefinery-lessons]
