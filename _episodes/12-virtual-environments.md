@@ -1,7 +1,7 @@
 ---
 title: "Virtual Environments For Software Development"
 start: false
-teaching: 30
+teaching: 20
 exercises: 0
 questions:
 - "What are virtual environments in software development and why you should use them?"
