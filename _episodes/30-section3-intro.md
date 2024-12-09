@@ -1,7 +1,7 @@
 ---
 title: "Section 3: Automatizing code quality checks"
 colour: "#fafac8"
-start: true
+start: false
 teaching: 5
 exercises: 0
 questions:
