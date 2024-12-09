@@ -1,7 +1,7 @@
 ---
 title: "Section 1: Obtaining the Software Project and Preparing Virtual Environment"
 colour: "#fafac8"
-start: true
+start: False
 teaching: 5
 exercises: 0
 questions:
