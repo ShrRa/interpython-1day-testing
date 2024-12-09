@@ -171,6 +171,55 @@ $ mkdir -p .github/workflows
 ~~~
 {: .language-bash}
 
+> ## Making Jupyter Lab show hidden files
+> By default, Jupyter Lab file manager does not show hidden files and directories. 
+> If you prefer to change that, you need to enable a corresponding option in Jupyter Lab configuration file. In the terminal run:
+> ~~~
+> $ jupyter --paths
+> ~~~
+>  {: .language-bash}
+> ~~~
+> config:
+>     /home/alex/.jupyter
+>     ...
+> data:
+>     /home/alex/.local/share/jupyter
+>     ...
+> ~~~
+>  {: .output}
+> This command lists the folders in which Jupyter will look for configuration files, ordered by precedence.
+> In all likelyhood, you already have a config file called `jupyter_server_config.py` in the upmost folder:
+> ~~~
+> $ ls -l /home/alex/.jupyter
+> ~~~
+>  {: .language-bash}
+> ~~~
+> total 84
+> -rw-rw-r-- 1 alex alex 69714 Jul  1 12:38 jupyter_server_config.py
+> drwxrwxr-x 4 alex alex  4096 Feb  4 14:28 lab
+> ...
+> ~~~
+>  {: .output}
+> If not, you can generate it by typing:
+> ~~~
+> $ jupyter server --generate-config
+> ~~~
+> {: .language-bash}
+> Next, open it with any text editor, for example:
+> ~~~
+> $ gedit /home/alex/.jupyter/jupyter_server_config.py 
+> ~~~
+> {: .language-bash}
+> and find `c.ContentsManager.allow_hidden` parameter. By default it is commented out
+> and set to `False`,
+> so you need to uncomment it and change its value to `True`, and then save the file.
+> 
+> After that go to the Jupyter Lab window and choose `View > Show hidden files`, and hidden files will be available
+> through the Jupyter Lab file browser. It is handy when you need to edit some hidden configuration files
+> or keep track on temporal files created by your code, and if you don't need it for some particular project,
+> you can always switch it off by unchecking `View > Show hidden files`.
+{: .callout}
+
 This directory is used specifically for GitHub Actions,
 allowing us to specify any number of workflows that can be run under a variety of conditions,
 which is also written using YAML.
