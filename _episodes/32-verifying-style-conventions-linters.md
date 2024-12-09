@@ -46,7 +46,7 @@ Let's look at a very well-used one of these called `pylint`.
 First, let's create a new branch and call it `style-fixes`.
 
 ~~~
-$ git checkout style-fixes
+$ git checkout -b style-fixes
 ~~~
 {: .language-bash}
 
